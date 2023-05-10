@@ -1,0 +1,36 @@
+﻿@using Application.Contracts.Services
+@using Domain.Entities.Information
+@using Domain.Services
+@inject IHelperService helpService
+@inject IInformationService _informationService
+
+<a asp-action="Create" class="btn btn-success">Create New</a>
+<table class="table">
+    <thead>
+        <tr>
+            @foreach(var item in helpService.GetListNameFieldAsync<Information>())
+            {
+                <th>@item</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in await _informationService.GetAllAsync())
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.License</td>
+                <td>@item.Revenue</td>
+                <td>@item.Establshed</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>            
+        }
+    </tbody>
+</table>
+
+
