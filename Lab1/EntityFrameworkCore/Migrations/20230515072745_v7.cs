@@ -4,7 +4,7 @@
 
 namespace EntityFrameworkCore.Migrations
 {
-    public partial class v2 : Migration
+    public partial class v7 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

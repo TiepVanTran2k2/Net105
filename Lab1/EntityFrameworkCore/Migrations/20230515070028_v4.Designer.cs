@@ -4,6 +4,7 @@ using EntityFrameworkCore.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DbContextApp))]
-    partial class DbContextAppModelSnapshot : ModelSnapshot
+    [Migration("20230515070028_v4")]
+    partial class v4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,22 +128,6 @@ namespace EntityFrameworkCore.Migrations
                     b.ToTable("Client", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Lab2.Company", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("varchar(15)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Company", (string)null);
-                });
-
             modelBuilder.Entity("Domain.Entities.Lab2.NhanVien", b =>
                 {
                     b.Property<Guid>("MaNV")
@@ -185,62 +171,6 @@ namespace EntityFrameworkCore.Migrations
                     b.HasKey("MaNV");
 
                     b.ToTable("NhanVien", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.Lab2.Person", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Person", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.Lab2.PersonCompanies", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("Company_Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("Current")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FromYear")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("Person_Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<DateTime?>("ToYear")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Company_Id");
-
-                    b.HasIndex("Person_Id");
-
-                    b.ToTable("PersonCompanies", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Lab2.ThanNhan", b =>
@@ -292,25 +222,6 @@ namespace EntityFrameworkCore.Migrations
                     b.Navigation("Address");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Lab2.PersonCompanies", b =>
-                {
-                    b.HasOne("Domain.Entities.Lab2.Company", "Company")
-                        .WithMany("PersonCompanies")
-                        .HasForeignKey("Company_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Lab2.Person", "Person")
-                        .WithMany("Companies")
-                        .HasForeignKey("Person_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("Person");
-                });
-
             modelBuilder.Entity("Domain.Entities.Lab2.ThanNhan", b =>
                 {
                     b.HasOne("Domain.Entities.Lab2.NhanVien", "NhanVien")
@@ -333,19 +244,9 @@ namespace EntityFrameworkCore.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.Lab2.Company", b =>
-                {
-                    b.Navigation("PersonCompanies");
-                });
-
             modelBuilder.Entity("Domain.Entities.Lab2.NhanVien", b =>
                 {
                     b.Navigation("ThanNhan");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Lab2.Person", b =>
-                {
-                    b.Navigation("Companies");
                 });
 #pragma warning restore 612, 618
         }

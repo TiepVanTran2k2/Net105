@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DbContextApp))]
-    [Migration("20230510061034_v4")]
-    partial class v4
+    [Migration("20230515043131_v1")]
+    partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -88,6 +88,57 @@ namespace EntityFrameworkCore.Migrations
                     b.ToTable("Information");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Lab2.Address", b =>
+                {
+                    b.Property<Guid>("Address_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ClientAddress_ID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Home_addr")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Office_addr")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Address_ID");
+
+                    b.HasIndex("ClientAddress_ID");
+
+                    b.ToTable("Address", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.Lab2.Client", b =>
+                {
+                    b.Property<Guid>("Address_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("Address_ID1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ClientName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PhoneNO")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
+
+                    b.HasKey("Address_ID");
+
+                    b.HasIndex("Address_ID1");
+
+                    b.ToTable("Client", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entities.Employee.Employee", b =>
                 {
                     b.HasOne("Domain.Entities.Department.Department", "Departments")
@@ -97,6 +148,20 @@ namespace EntityFrameworkCore.Migrations
                         .IsRequired();
 
                     b.Navigation("Departments");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Lab2.Address", b =>
+                {
+                    b.HasOne("Domain.Entities.Lab2.Client", null)
+                        .WithMany()
+                        .HasForeignKey("ClientAddress_ID");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Lab2.Client", b =>
+                {
+                    b.HasOne("Domain.Entities.Lab2.Address", null)
+                        .WithMany()
+                        .HasForeignKey("Address_ID1");
                 });
 
             modelBuilder.Entity("Domain.Entities.Department.Department", b =>
