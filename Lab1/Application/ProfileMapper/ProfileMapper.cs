@@ -1,6 +1,8 @@
 ﻿using Application.Contracts.Dtos.Information;
+using Application.Contracts.Dtos.StudentInformation;
 using AutoMapper;
 using Domain.Entities.Information;
+using Domain.Entities.Lab3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,9 @@ namespace Application.ProfileMapper
         {
             CreateMap<Information, InformationDto>().ReverseMap();
             CreateMap<Information, InformationInsertDto>().ReverseMap();
+            CreateMap<StudentInformation, StudentInformationDto>().ReverseMap();
+            CreateMap<StudentInformation, StudentInformationResponseDto>().ReverseMap();
+
         }
     }
 }

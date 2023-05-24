@@ -9,6 +9,7 @@ namespace Domain.Entities.Information
 {
     public class Information : BaseEntity
     {
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the name")]
         public string Name { get; set; }
         public string License { get; set; }
         public DateTime Establshed { get; set; } = DateTime.Now;

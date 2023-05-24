@@ -2,6 +2,7 @@
 using Domain.Entities.Employee;
 using Domain.Entities.Information;
 using Domain.Entities.Lab2;
+using Domain.Entities.Lab3;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -35,6 +36,7 @@ namespace EntityFrameworkCore.Entity
         public DbSet<PersonCompanies> PersonCompanies { get; set; }
         public DbSet<Person> Person { get; set; }
         public DbSet<Company> Company { get; set; }
+        public DbSet<StudentInformation> StudentInformation { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

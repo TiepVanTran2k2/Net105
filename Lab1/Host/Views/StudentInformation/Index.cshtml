@@ -1,0 +1,33 @@
+﻿@using Application.Contracts.Dtos.StudentInformation
+@using Application.Contracts.Services
+@using Domain.Services
+@inject IHelperService _iHelperService
+@inject IStudentInformationService _iStudentInformationService
+<a asp-action="Create" class="btn btn-success">Create New</a>
+<table class="table">
+    <thead>
+        <tr>
+            @foreach (var item in _iHelperService.GetListNameFieldAsync<StudentInformationResponseDto>())
+            {
+               if(item != "Id")
+               {
+                    <th>@item</th>
+               }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in await _iStudentInformationService.GetAllAsync())
+        {
+            <tr>
+                <td>@item.Url</td>
+                <td>@item.Name</td>
+                <td>@item.Email</td>
+                <td>@item.Gender</td>
+                <td>@item.BirthDate</td>
+                <td>@item.BatchTime</td>
+                <td>@item.PhoneNumber</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,97 @@
+﻿@using Application.Contracts.Dtos.StudentInformation
+@using Application.Contracts.Services
+@model StudentInformationDto
+@inject IStudentInformationService _iStudentInformationService
+
+<h4>Customer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>   
+            
+            <div class="form-group">
+                <label asp-for="Gender" class="control-label"></label>
+                <select asp-for="Gender" class="form-select">
+                    <option value="" selected>Choose Gender</option>
+                    <option value="true">Female</option>
+                    <option value="false">Male</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BirthDate" class="control-label"></label>
+                <br />
+                <input asp-for="BirthDate" />
+                <br />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BatchTime" class="control-label"></label>
+                <br />
+                <input type="time" asp-for="BatchTime" />
+                <br />
+                <span asp-validation-for="BatchTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <br />
+                <input asp-for="PhoneNumber" />
+                <br />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <br />
+                <input asp-for="Url" />
+                <br />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <br />
+                <input asp-for="Email" />
+                <br />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <br />
+                <input asp-for="Password" />
+                <br />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ComfirmPassword" class="control-label"></label>
+                <br />
+                <input asp-for="ComfirmPassword" />
+                <br />
+                <span asp-validation-for="ComfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
