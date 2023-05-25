@@ -21,6 +21,7 @@ builder.Services.AddTransient<IInformationService, InformationService>();
 builder.Services.AddTransient<IHelperService, HelperService>();
 builder.Services.AddTransient<IStudentInformationService, StudentInformationService>();
 builder.Services.AddTransient<IStudentInformationRepository, StudentInformationRepository>();
+builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
 #endregion
 
 builder.Services.AddControllers();

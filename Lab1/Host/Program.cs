@@ -7,6 +7,7 @@ using Domain.Repository;
 using Domain.Services;
 using EntityFrameworkCore.Entity;
 using EntityFrameworkCore.Repository;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,8 @@ builder.Services.AddTransient<IInformationService, InformationService>();
 builder.Services.AddTransient<IHelperService, HelperService>();
 builder.Services.AddTransient<IStudentInformationService, StudentInformationService>();
 builder.Services.AddTransient<IStudentInformationRepository, StudentInformationRepository>();
+builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DbContextApp>();
 #endregion
 
 

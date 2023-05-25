@@ -1,8 +1,10 @@
-﻿using Domain.Entities.Department;
+﻿using Domain.Entities.ApplicationUser;
+using Domain.Entities.Department;
 using Domain.Entities.Employee;
 using Domain.Entities.Information;
 using Domain.Entities.Lab2;
 using Domain.Entities.Lab3;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -13,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace EntityFrameworkCore.Entity
 {
-    public class DbContextApp : DbContext
+    public class DbContextApp : IdentityDbContext
     {
         protected readonly IConfiguration Configuration;
 
@@ -37,9 +39,10 @@ namespace EntityFrameworkCore.Entity
         public DbSet<Person> Person { get; set; }
         public DbSet<Company> Company { get; set; }
         public DbSet<StudentInformation> StudentInformation { get; set; }
-
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DbContextApp).Assembly);
 
             modelBuilder.Entity<Address>(a =>
