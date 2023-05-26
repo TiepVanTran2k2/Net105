@@ -103,10 +103,7 @@ namespace Application.Applications
             try
             {
                 var user = await _userManager.FindByIdAsync(_userManager.GetUserId(claims));
-                user.UserName = input.UserName;
-                var informationMapper = _iMapper.Map<ApplicationUserDto>(user);
-                informationMapper.Name= input.Name;
-                var informationUser = _iMapper.Map<ApplicationUser>(informationMapper);
+                user.Email = input.UserName;
                 var result = await _userManager.UpdateAsync(user);
                 return input;
             }
