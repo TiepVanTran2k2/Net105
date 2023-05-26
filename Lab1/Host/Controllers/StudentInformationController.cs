@@ -1,10 +1,12 @@
 ﻿using Application.Contracts.Dtos.StudentInformation;
 using Application.Contracts.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Host.Controllers
 {
+    [Authorize]
     public class StudentInformationController : Controller
     {
         private readonly IStudentInformationService _iStudentInformationService;

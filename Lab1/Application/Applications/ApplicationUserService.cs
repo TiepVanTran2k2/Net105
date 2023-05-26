@@ -19,6 +19,48 @@ namespace Application.Applications
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
+        public async Task ForgotPasswordAsync(ForgotPassworDto input)
+        {
+            try
+            {
+
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<LoginDto> LoginAsync(LoginDto loginDto)
+        {
+            try
+            {
+                var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, loginDto.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    return loginDto;
+                }
+                throw new Exception("Login fail");
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task LogoutAsync()
+        {
+            try
+            {
+                await _signInManager.SignOutAsync();
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
         public async Task<RegisterDto> RegisterAsync(RegisterDto registerDto)
         {
             try
