@@ -6,7 +6,7 @@
     @if(SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link" #href="#">@UserManager.GetUserAsync(User)</a>
+            <a class="nav-link" #href="#">@await UserManager.GetUserAsync(User)</a>
         </li>
     }
     else{
