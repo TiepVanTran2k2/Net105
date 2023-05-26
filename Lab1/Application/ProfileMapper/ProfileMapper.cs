@@ -26,6 +26,10 @@ namespace Application.ProfileMapper
             CreateMap<ApplicationUser, RegisterDto>()
                 .ForPath(dest => dest.Email, opt => opt.MapFrom(src => src.UserName))
                 .ReverseMap();
+            CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
+            CreateMap<ApplicationUser, IdentityUser>().ReverseMap();
+            CreateMap<ApplicationUserDto, IdentityUser>().ReverseMap();
+
             #endregion
         }
     }

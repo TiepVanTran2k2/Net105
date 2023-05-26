@@ -55,5 +55,16 @@ namespace Host.Controllers
             await _iApplicationUserService.ForgotPasswordAsync(input);
             return RedirectToAction("Login");
         }
+        [HttpGet]
+        public async Task<IActionResult> Information()
+        {
+            return View(await _iApplicationUserService.InformationUserAsync(User));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Update(ApplicationUserDto input)
+        {
+            await _iApplicationUserService.UpdateAsync(input, User);
+            return RedirectToAction("Information");
+        }
     }
 }

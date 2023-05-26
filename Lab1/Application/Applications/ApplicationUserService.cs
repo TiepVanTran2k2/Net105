@@ -3,6 +3,7 @@ using Application.Contracts.Services;
 using AutoMapper;
 using Domain.Entities.ApplicationUser;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Application.Applications
 {
@@ -11,13 +12,16 @@ namespace Application.Applications
         private readonly IMapper _iMapper;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IApplicationUserRepository _userRepository;
         public ApplicationUserService(IMapper mapper,
                                       UserManager<IdentityUser> userManager,
-                                      SignInManager<IdentityUser> signInManager)
+                                      SignInManager<IdentityUser> signInManager,
+                                      IApplicationUserRepository userRepository)
         {
             _iMapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
+            _userRepository = userRepository;
         }
 
         public async Task ForgotPasswordAsync(ForgotPassworDto input)
@@ -25,6 +29,20 @@ namespace Application.Applications
             try
             {
 
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<ApplicationUserDto> InformationUserAsync(ClaimsPrincipal input)
+        {
+            try
+            {
+                var informationUser = await _userManager.FindByIdAsync(_userManager.GetUserId(input));
+                var informationMapper = _iMapper.Map<ApplicationUserDto>(informationUser);
+                return informationMapper;
             }
             catch(Exception ex)
             {
@@ -73,6 +91,24 @@ namespace Application.Applications
                     return registerDto;
                 }
                 return registerDto;
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<ApplicationUserDto> UpdateAsync(ApplicationUserDto input, ClaimsPrincipal claims)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(_userManager.GetUserId(claims));
+                user.UserName = input.UserName;
+                var informationMapper = _iMapper.Map<ApplicationUserDto>(user);
+                informationMapper.Name= input.Name;
+                var informationUser = _iMapper.Map<ApplicationUser>(informationMapper);
+                var result = await _userManager.UpdateAsync(user);
+                return input;
             }
             catch(Exception ex)
             {

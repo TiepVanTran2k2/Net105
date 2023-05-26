@@ -1,6 +1,7 @@
 using Application.Applications;
 using Application.Contracts.Services;
 using AutoMapper;
+using Domain.Entities.ApplicationUser;
 using Domain.Entities.Information;
 using Domain.Entities.Lab3;
 using Domain.Repository;
@@ -25,6 +26,7 @@ builder.Services.AddTransient<IStudentInformationService, StudentInformationServ
 builder.Services.AddTransient<IStudentInformationRepository, StudentInformationRepository>();
 builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DbContextApp>();
+builder.Services.AddTransient<IApplicationUserRepository, ApplicationRepository>();
 #endregion
 
 
