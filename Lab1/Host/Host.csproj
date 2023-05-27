@@ -29,4 +29,8 @@
     <ProjectReference Include="..\EntityFrameworkCore\EntityFrameworkCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+
 </Project>

@@ -11,8 +11,8 @@ namespace Application.Contracts.Dtos.ApplicationUser
     public class LoginDto
     {
         [Required]
-        [EmailAddress(ErrorMessage = "Email not pass")]
-        public string Email { get; set; }
+        [Display(Name ="User Name")]
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

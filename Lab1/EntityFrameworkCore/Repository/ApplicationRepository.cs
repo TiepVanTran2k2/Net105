@@ -21,14 +21,10 @@ namespace EntityFrameworkCore.Repository
             _userManager = userManager;
             _dbContextApp = dbContextApp;
         }
-        public async Task<bool> UpdateAsync(IdentityUser input)
+
+        public IQueryable<ApplicationUser> GetList()
         {
-            var result = await _userManager.UpdateAsync(input);
-            if (result.Succeeded)
-            {
-                await _dbContextApp.SaveChangesAsync();
-            }
-            return true;
+            return _dbContextApp.ApplicationUser;
         }
     }
 }

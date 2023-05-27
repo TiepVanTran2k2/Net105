@@ -54,7 +54,7 @@ namespace Application.Applications
         {
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(loginDto.Email, loginDto.Password, loginDto.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, loginDto.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     return loginDto;
@@ -79,7 +79,7 @@ namespace Application.Applications
             }
         }
 
-        public async Task<RegisterDto> RegisterAsync(RegisterDto registerDto)
+        public async Task<string> RegisterAsync(RegisterDto registerDto)
         {
             try
             {
@@ -88,9 +88,10 @@ namespace Application.Applications
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(register, isPersistent: false);
-                    return registerDto;
+                    return "Success";
                 }
-                return registerDto;
+                var message = result.Errors.FirstOrDefault()?.Description;
+                return message; 
             }
             catch(Exception ex)
             {
@@ -98,14 +99,42 @@ namespace Application.Applications
             }
         }
 
-        public async Task<ApplicationUserDto> UpdateAsync(ApplicationUserDto input, ClaimsPrincipal claims)
+        public async Task<string> UpdateAsync(ApplicationUserDto input, ClaimsPrincipal claims)
         {
             try
             {
                 var user = await _userManager.FindByIdAsync(_userManager.GetUserId(claims));
-                user.Email = input.UserName;
-                var result = await _userManager.UpdateAsync(user);
-                return input;
+                var userList = (_userRepository.GetList()).Where(x => x.Email != user.Email || x.PhoneNumber != user.PhoneNumber);                
+
+                if(user.Email == input.Email && user.PhoneNumber == input.PhoneNumber)
+                {
+                    user.Email = input.Email;
+                    user.PhoneNumber = input.PhoneNumber;
+                    var result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        return "Update success";
+                    }
+                }
+                else
+                {
+                    if(userList.Any(x => x.Email == input.Email || x.PhoneNumber == input.PhoneNumber))
+                    {
+                        if(userList.Any(x => x.Email == input.Email))
+                        {
+                            return "Email exist";
+                        }
+                        return "Phone number exist";
+                    }
+                    user.Email = input.Email;
+                    user.PhoneNumber = input.PhoneNumber;
+                    var result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        return "Update success";
+                    }
+                }                
+                return "Update fail";
             }
             catch(Exception ex)
             {

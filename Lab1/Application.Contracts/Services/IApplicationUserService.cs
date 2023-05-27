@@ -10,11 +10,11 @@ namespace Application.Contracts.Services
 {
     public interface IApplicationUserService
     {
-        Task<RegisterDto> RegisterAsync(RegisterDto registerDto);
+        Task<string> RegisterAsync(RegisterDto registerDto);
         Task<LoginDto> LoginAsync(LoginDto loginDto);
         Task LogoutAsync();
         Task ForgotPasswordAsync(ForgotPassworDto input);
         Task<ApplicationUserDto> InformationUserAsync(ClaimsPrincipal input);
-        Task<ApplicationUserDto> UpdateAsync(ApplicationUserDto input, ClaimsPrincipal claims);
+        Task<string> UpdateAsync(ApplicationUserDto input, ClaimsPrincipal claims);
     }
 }

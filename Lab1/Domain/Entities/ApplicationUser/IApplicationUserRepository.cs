@@ -9,6 +9,6 @@ namespace Domain.Entities.ApplicationUser
 {
     public interface IApplicationUserRepository
     {
-        Task<bool> UpdateAsync(IdentityUser input);
+        IQueryable<ApplicationUser> GetList();
     }
 }

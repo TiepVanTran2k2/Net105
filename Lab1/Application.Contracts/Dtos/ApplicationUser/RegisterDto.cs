@@ -27,6 +27,7 @@ namespace Application.Contracts.Dtos.ApplicationUser
         [Compare(nameof(Password), ErrorMessage = "The password and confimation password do not match")]
         public string ConfirmPassword { get; set; }
         [Required]
+        [Display(Name = "Name")]
         public string Name { get; set; }
         public bool Agree { get; set; }
     }
