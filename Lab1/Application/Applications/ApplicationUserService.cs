@@ -41,7 +41,9 @@ namespace Application.Applications
             try
             {
                 var informationUser = await _userManager.FindByIdAsync(_userManager.GetUserId(input));
+                var role = (await _userManager.GetRolesAsync(informationUser))?.OrderBy(x => x).FirstOrDefault();
                 var informationMapper = _iMapper.Map<ApplicationUserDto>(informationUser);
+                informationMapper.Role = role;
                 return informationMapper;
             }
             catch(Exception ex)
@@ -50,16 +52,16 @@ namespace Application.Applications
             }
         }
 
-        public async Task<LoginDto> LoginAsync(LoginDto loginDto)
+        public async Task<bool> LoginAsync(LoginDto loginDto)
         {
             try
             {
                 var result = await _signInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, loginDto.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    return loginDto;
+                    return true;
                 }
-                throw new Exception("Login fail");
+                return false;
             }
             catch(Exception ex)
             {

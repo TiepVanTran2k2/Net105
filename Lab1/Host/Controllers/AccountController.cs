@@ -1,5 +1,6 @@
 ﻿using Application.Contracts.Dtos.ApplicationUser;
 using Application.Contracts.Services;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Host.Controllers
@@ -7,9 +8,12 @@ namespace Host.Controllers
     public class AccountController : Controller
     {
         private readonly IApplicationUserService _iApplicationUserService;
-        public AccountController(IApplicationUserService applicationUserService)
+        private readonly INotyfService _notyf;
+        public AccountController(IApplicationUserService applicationUserService,
+                                 INotyfService notyf)
         {
             _iApplicationUserService = applicationUserService;
+            _notyf = notyf;
         }
         public IActionResult Index()
         {
@@ -35,8 +39,22 @@ namespace Host.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            await _iApplicationUserService.LoginAsync(loginDto);
-            return RedirectToAction("Index", "Home");
+            try
+            {
+                var result = await _iApplicationUserService.LoginAsync(loginDto);
+                if (result)
+                {
+                    _notyf.Success("Login success", 4);
+                    return RedirectToAction("Index", "Home");
+                }
+                _notyf.Warning("Login fail");
+                return View();
+            }
+            catch(Exception ex)
+            {
+                _notyf.Error(ex.Message, 4);
+                return View();
+            }
         }
         [HttpGet]
         public async Task<IActionResult> Logout()
@@ -63,8 +81,22 @@ namespace Host.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(ApplicationUserDto input)
         {
-            await _iApplicationUserService.UpdateAsync(input, User);
-            return RedirectToAction("Information");
+            try
+            {
+                var mess = await _iApplicationUserService.UpdateAsync(input, User);
+                if (mess == "Update success")
+                {
+                    _notyf.Success(mess, 4);
+                    return RedirectToAction("Information");
+                }
+                _notyf.Warning(mess, 4);
+                return RedirectToAction("Information");
+            }
+            catch(Exception ex)
+            {
+                _notyf.Error(ex.Message, 4);
+                return RedirectToAction("Information");
+            }
         }
     }
 }

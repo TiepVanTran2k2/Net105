@@ -1,5 +1,7 @@
 using Application.Applications;
 using Application.Contracts.Services;
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using AutoMapper;
 using Domain.Entities.ApplicationUser;
 using Domain.Entities.Information;
@@ -28,7 +30,7 @@ builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DbContextApp>();
 builder.Services.AddTransient<IApplicationUserRepository, ApplicationRepository>();
 #endregion
-
+builder.Services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.BottomRight; });
 
 var app = builder.Build();
 
@@ -44,7 +46,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseNotyf();
 app.UseAuthentication();
 app.UseAuthorization();
 
