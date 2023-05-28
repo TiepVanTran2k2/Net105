@@ -1,6 +1,8 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using Application.Contracts.Dtos.Product
+@using Microsoft.AspNetCore.Identity
 @inject UserManager<IdentityUser> UserManager
 @inject SignInManager<IdentityUser> SignInManager
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,12 +59,7 @@
                                 <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
                             </ul>
                         </li>
-                        <form>
-                            <div class="input-group">
-                                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                                <button type="button" class="btn btn-outline-primary">search</button>
-                            </div>
-                        </form>
+                        <partial name="_SearchPartial"/>
                     </ul>
                     <form class="d-flex">
                         <button class="btn btn-outline-dark" type="submit">

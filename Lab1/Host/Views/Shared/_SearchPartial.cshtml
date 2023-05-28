@@ -1,0 +1,9 @@
+﻿@using Application.Contracts.Dtos.ApplicationUser
+@using Application.Contracts.Dtos.Product
+@inject RegisterDto;
+<form asp-controller="Home" asp-action="Index" method="post">
+      <div class="input-group">
+          <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+          <input type="submit" value="Search" class="btn btn-outline-primary"/>
+      </div>
+</form>

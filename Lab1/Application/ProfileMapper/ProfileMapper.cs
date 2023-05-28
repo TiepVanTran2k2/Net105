@@ -1,6 +1,8 @@
 ﻿using Application.Contracts.Dtos.ApplicationUser;
+using Application.Contracts.Dtos.Product;
 using AutoMapper;
 using Domain.Entities.ApplicationUser;
+using Domain.Entities.Product;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.ProfileMapper
@@ -17,6 +19,9 @@ namespace Application.ProfileMapper
             CreateMap<ApplicationUser, IdentityUser>().ReverseMap();
             CreateMap<ApplicationUserDto, IdentityUser>().ReverseMap();
 
+            #endregion
+            #region Product
+            CreateMap<Product, ProductDto>().ReverseMap();
             #endregion
         }
     }

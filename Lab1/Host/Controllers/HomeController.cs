@@ -1,4 +1,6 @@
-﻿using Host.Models;
+﻿using Application.Contracts.Dtos.Product;
+using Application.Contracts.Services;
+using Host.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,15 +9,22 @@ namespace Host.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IProductService _iProductService;
+        public HomeController(ILogger<HomeController> logger,
+                              IProductService productService)
         {
             _logger = logger;
+            _iProductService = productService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _iProductService.GetListFilterProductAsync(new RequestGetListFilterProductDto()));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index(RequestGetListFilterProductDto input)
+        {
+            return View(await _iProductService.GetListFilterProductAsync(input));
         }
 
         public IActionResult Privacy()

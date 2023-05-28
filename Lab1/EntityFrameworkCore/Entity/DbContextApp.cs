@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.ApplicationUser;
+using Domain.Entities.Product;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,7 @@ namespace EntityFrameworkCore.Entity
             options.UseSqlServer(Configuration.GetConnectionString("Default"));
         }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Product> Product { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
