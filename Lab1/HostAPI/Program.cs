@@ -1,8 +1,6 @@
 using Application.Applications;
 using Application.Contracts.Services;
 using AutoMapper;
-using Domain.Entities.Information;
-using Domain.Entities.Lab3;
 using Domain.Repository;
 using Domain.Services;
 using EntityFrameworkCore.Entity;
@@ -16,11 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DbContextApp>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
-builder.Services.AddTransient<IInformationRepository, InformationRepository>();
-builder.Services.AddTransient<IInformationService, InformationService>();
 builder.Services.AddTransient<IHelperService, HelperService>();
-builder.Services.AddTransient<IStudentInformationService, StudentInformationService>();
-builder.Services.AddTransient<IStudentInformationRepository, StudentInformationRepository>();
 builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
 #endregion
 
