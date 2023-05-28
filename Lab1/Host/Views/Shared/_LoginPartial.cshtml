@@ -6,7 +6,7 @@
     @if(SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a asp-controller="Account" asp-action="Information" class="nav-link" #href="#">@await UserManager.GetUserAsync(User)</a>
+            <a asp-controller="Account" asp-action="Information" class="nav-link" #href="#"><i class="bi bi-person-square"></i><h7 class="my-3">Profile</h7></a>
         </li>
 
         <li class="nav-item">

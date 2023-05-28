@@ -90,12 +90,34 @@ namespace Application.Applications
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(register, isPersistent: false);
+                    var resultRole = await AddRoleUserAsync(register.Id);
+                    if (!resultRole)
+                    {
+                        return "Add role fail";
+                    }
                     return "Success";
                 }
                 var message = result.Errors.FirstOrDefault()?.Description;
                 return message; 
             }
             catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+        public async Task<bool> AddRoleUserAsync(string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                var roleResult = await _userManager.AddToRoleAsync(user, "employee");
+                if (roleResult.Succeeded)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
             {
                 throw ex.GetBaseException();
             }
