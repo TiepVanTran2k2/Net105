@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Dtos.Product;
+﻿using Application.Contracts.Dtos;
+using Application.Contracts.Dtos.Product;
 using Application.Contracts.Services;
 using Host.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,23 +20,12 @@ namespace Host.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _iProductService.GetListFilterProductAsync(new RequestGetListFilterProductDto()));
+            return View(await _iProductService.GetListFilterProductAsync(new Paging<ProductDto, RequestGetListFilterProductDto>()));
         }
         [HttpPost]
-        public async Task<IActionResult> Index(RequestGetListFilterProductDto input)
+        public async Task<IActionResult> Index(Paging<ProductDto, RequestGetListFilterProductDto> input)
         {
             return View(await _iProductService.GetListFilterProductAsync(input));
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

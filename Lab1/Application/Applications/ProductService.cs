@@ -22,30 +22,41 @@ namespace Application.Applications
             _iMapper = mapper;
         }
 
-        public async Task<Paging<ProductDto>> GetListFilterProductAsync(RequestGetListFilterProductDto input)
+        public async Task<Paging<ProductDto, RequestGetListFilterProductDto>> GetListFilterProductAsync(Paging<ProductDto, RequestGetListFilterProductDto> input)
         {
             try
             {
                 var listProduct = (await _iProductRepository.GetAllAsync());
-                if(input.Keyword != null)
+                if(input?.Payload?.Keyword != null)
                 {
-                    listProduct = listProduct?.Where(x => x.Name.Contains(input.Keyword)).ToList();
+                    listProduct = listProduct?.Where(x => x.Name.Contains(input.Payload.Keyword)).ToList();
                 }
-                if (input.Type != null)
+                if (input?.Payload?.Type != null)
                 {
-                    listProduct = listProduct?.Where(x => x.Type == (int)input.Type).ToList();
+                    listProduct = listProduct?.Where(x => x.Type == (int)input.Payload.Type).ToList();
                 }
                 if (!listProduct.Any())
                 {
-                    return new Paging<ProductDto>();
+                    return new Paging<ProductDto, RequestGetListFilterProductDto>();
                 }
-                var resultFilter = listProduct.Skip((input.Skip.HasValue && input.Take.HasValue) ? (input.Skip.Value - 1) * input.Take.Value : 0)
-                                              .Take(input.Take.HasValue ? input.Take.Value : 10)
-                                              .ToList();
-                var result = _iMapper.Map<List<Product>, List<ProductDto>>(resultFilter);
-                return new Paging<ProductDto>
+                if(input?.Payload?.Skip != null)
                 {
-                    Total = (await _iProductRepository.GetAllAsync()).Count(),
+                    listProduct = listProduct.Skip((input.Payload.Skip.HasValue && input.Payload.Take.HasValue) ? (input.Payload.Skip.Value - 1) * input.Payload.Take.Value : 0)
+                                             .Take(input.Payload.Take.HasValue ? input.Payload.Take.Value : 10)
+                                             .ToList();
+                }
+                else
+                {
+                    listProduct = listProduct.Skip(0)
+                                              .Take(12)
+                                              .ToList();
+                }
+                var result = _iMapper.Map<List<Product>, List<ProductDto>>(listProduct);
+                double pageCount = (double)((decimal)(await _iProductRepository.GetAllAsync()).Count() / Convert.ToDecimal(12));
+                return new Paging<ProductDto, RequestGetListFilterProductDto>
+                {
+                    Payload = input.Payload,
+                    PageCount = (int)Math.Ceiling(pageCount),
                     Items = result
                 };
 

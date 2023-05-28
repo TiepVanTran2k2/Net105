@@ -13,5 +13,6 @@ namespace Domain.Entities.Product
         public string Description { get; set; }
         public int Status { get; set; }
         public int Type { get; set; }
+        public string UrlImg { get; set; }
     }
 }

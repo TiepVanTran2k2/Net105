@@ -10,6 +10,6 @@ namespace Application.Contracts.Services
 {
     public interface IProductService
     {
-        Task<Paging<ProductDto>> GetListFilterProductAsync(RequestGetListFilterProductDto input);
+        Task<Paging<ProductDto, RequestGetListFilterProductDto>> GetListFilterProductAsync(Paging<ProductDto, RequestGetListFilterProductDto> input);
     }
 }

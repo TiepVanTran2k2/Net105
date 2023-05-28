@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Application.Contracts.Dtos
 {
-    public class Paging<T>
+    public class Paging<T,D>
     {
-        public int Total { get; set; }
+        public D Payload { get; set; }
+        public int PageCount{ get; set; }
         public List<T>? Items { get; set; }
     }
 }
