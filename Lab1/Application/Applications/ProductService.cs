@@ -47,7 +47,7 @@ namespace Application.Applications
                             input.UrlImg = GetBlob(fileName, _configuration["ContainerName"]);
                             break;
                         case false:
-                            input.UrlImg = GetBlob(_configuration["ContainerName"], "testimage.jpg");
+                            input.UrlImg = GetBlob("testimage.jpg", _configuration["ContainerName"]);
                             break;
                     }
                 }
@@ -140,6 +140,48 @@ namespace Application.Applications
 
             }
             catch (Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<bool> UpdateAsync(RequestUpdateProductDto input)
+        {
+            try
+            {
+                if (input.GetFile != null)
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(input.GetFile.FileName) + "_" + Guid.NewGuid() + Path.GetExtension(input.GetFile.FileName);
+                    var resultUpLoadFile = await UpLoadBlob(fileName, _configuration["ContainerName"], input.GetFile);
+                    switch (resultUpLoadFile)
+                    {
+                        case true:
+                            input.UrlImg = GetBlob(fileName, _configuration["ContainerName"]);
+                            break;
+                        case false:
+                            input.UrlImg = GetBlob("testimage.jpg", _configuration["ContainerName"]);
+                            break;
+                    }
+                }
+                var modelUpdate = _iMapper.Map<Product>(input);
+                await _iProductRepository.UpdateAsync(modelUpdate);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<RequestUpdateProductDto> GetByIdAsync(Guid id)
+        {
+            try
+            {
+                var product = await _iProductRepository.GetByIdAsync(id);
+                var result = _iMapper.Map<RequestUpdateProductDto>(product);
+                return result;
+            }
+            catch(Exception ex)
             {
                 throw ex.GetBaseException();
             }

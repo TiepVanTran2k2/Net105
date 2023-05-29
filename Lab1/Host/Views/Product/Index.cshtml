@@ -1,1 +1,44 @@
-﻿
+﻿@using Application.Contracts.Dtos
+@using Application.Contracts.Dtos.Product
+@using Application.Contracts.Services
+@using Domain.Services
+@model Paging<ProductDto, RequestGetListFilterProductDto>
+@inject IHelperService _iHelperService
+@inject IProductService _iProductService
+
+@{
+    Layout = "_LayoutManager";
+}
+<a asp-action="Create" class="btn btn-success">Create</a>
+<table class="table">
+    <thead>
+        <tr>
+            @foreach (var item in _iHelperService.GetListNameFieldAsync<ProductDto>())
+            {
+                if (item != "Id")
+                {
+                    <th>@item</th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @if(Model?.Items != null)
+        {
+            foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price</td>
+                    <td>@item.Status</td>
+                    <td><img src="@item.UrlImg" width="50px" height="35px" /></td>
+                    <td>
+                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-success">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

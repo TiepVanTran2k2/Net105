@@ -11,6 +11,9 @@ namespace Application.Contracts.Services
     public interface IProductService
     {
         Task<Paging<ProductDto, RequestGetListFilterProductDto>> GetListFilterProductAsync(Paging<ProductDto, RequestGetListFilterProductDto> input);
-        Task<bool> CreateAsync(RequestCreateProductDto input); 
+        Task<bool> CreateAsync(RequestCreateProductDto input);
+        Task<bool> UpdateAsync(RequestUpdateProductDto input);
+        Task<RequestUpdateProductDto> GetByIdAsync(Guid id);
+
     }
 }

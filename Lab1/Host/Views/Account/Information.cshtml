@@ -3,6 +3,10 @@
 @using System.Security.Claims
 @model ApplicationUserDto
 @inject UserManager<IdentityUser> UserManager
+
+@{
+    Layout = "_LayoutAccount";
+}
 <section style="background-color: #eee;">
     <div class="container py-5">
 
@@ -19,7 +23,7 @@
                 </div>
             </div>
             <div class="col-lg-8">
-                <form asp-action="Update" method="post">
+                <form asp-action="Information" method="post">
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="row">

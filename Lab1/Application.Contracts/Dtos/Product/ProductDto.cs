@@ -14,6 +14,7 @@ namespace Application.Contracts.Dtos.Product
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public StatusProductEnum Status { get; set; }
         public string UrlImg { get; set; }
         public decimal Price { get; set; }
     }
@@ -35,6 +36,23 @@ namespace Application.Contracts.Dtos.Product
         [Required(ErrorMessage = "Please input price")]
         public decimal? Price { get; set; }
         public StatusProductEnum Status { get; set; }
+        [Required(ErrorMessage = "Please choose type product")]
+        public TypeProductEnum? Type { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class RequestUpdateProductDto
+    {
+        public Guid Id { get; set; }
+        [Required(ErrorMessage = "Please input product name")]
+        public string Name { get; set; }
+        public IFormFile? GetFile { get; set; }
+        public string UrlImg { get; set; }
+        public string ContainerName { get; set; }
+        [Required(ErrorMessage = "Please input price")]
+        public decimal? Price { get; set; }
+        [Required(ErrorMessage = "Please choose Status")]
+        public StatusProductEnum? Status { get; set; }
         [Required(ErrorMessage = "Please choose type product")]
         public TypeProductEnum? Type { get; set; }
         public string Description { get; set; }

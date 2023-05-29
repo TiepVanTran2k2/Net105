@@ -76,31 +76,4 @@
             </div>
         </div>
     </div>
-
-   <input type="file" id="file" accept="image/jpeg, image/png, image/jpg">
-    <img id="image" width="100px" height="100px">
 </div>
-
-<style>
-    #display_image{
-        width: 375px;
-        height: 250px;
-        border: 1px solid black
-    }
-</style>         
-
-<script>
-    const file = document.querySelector("#file")
-file.addEventListener("change", function() {
-  const reader = new FileReader()
-  reader.addEventListener("load", () => {
-    document.querySelector("#image").src = reader.result
-  })
-  reader.readAsDataURL(this.files[0]);
-})
-
-function changePage(Page){
-        document.getElementById('demo').value = Page;
-        documentgetElementById(Page).style.background = black;
-}
-</script>

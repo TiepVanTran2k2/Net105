@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Dtos.Product;
+﻿using Application.Contracts.Dtos;
+using Application.Contracts.Dtos.Product;
 using Application.Contracts.Services;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Domain.Entities.Product;
@@ -18,9 +19,14 @@ namespace Host.Controllers
             _iProductService = productRepository;
             _iNotyf = notyfService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _iProductService.GetListFilterProductAsync(new Paging<ProductDto, RequestGetListFilterProductDto>()));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index(Paging<ProductDto, RequestGetListFilterProductDto> input)
+        {
+            return View(await _iProductService.GetListFilterProductAsync(input));
         }
         public IActionResult Create()
         {
@@ -47,6 +53,31 @@ namespace Host.Controllers
             {
                 _iNotyf.Error(ex.Message, 4);
                 return View();
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            return View(await _iProductService.GetByIdAsync(id));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Update(RequestUpdateProductDto input)
+        {
+            try
+            {
+                var result = await _iProductService.UpdateAsync(input);
+                if (result)
+                {
+                    _iNotyf.Success("Update success", 4);
+                    return RedirectToAction("Index");
+                }
+                _iNotyf.Warning("Update fail", 4);
+                return RedirectToAction("Index");
+            }
+            catch(Exception ex)
+            {
+                _iNotyf.Error(ex.Message, 4);
+                return RedirectToAction("Index");
             }
         }
     }
