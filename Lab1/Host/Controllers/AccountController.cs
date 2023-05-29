@@ -79,7 +79,7 @@ namespace Host.Controllers
             return View(await _iApplicationUserService.InformationUserAsync(User));
         }
         [HttpPost]
-        public async Task<IActionResult> Update(ApplicationUserDto input)
+        public async Task<IActionResult> Information(ApplicationUserDto input)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace Host.Controllers
                 _notyf.Warning(mess, 4);
                 return RedirectToAction("Information");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _notyf.Error(ex.Message, 4);
                 return RedirectToAction("Information");
