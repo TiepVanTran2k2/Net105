@@ -80,5 +80,26 @@ namespace Host.Controllers
                 return RedirectToAction("Index");
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                var result = await _iProductService.DeleteAsync(id);
+                if (result)
+                {
+                    _iNotyf.Success("Delete success", 4);
+                    return RedirectToAction("Index");
+                }
+                _iNotyf.Warning("Delete fail", 4);
+                return RedirectToAction("Index");
+
+            }
+            catch(Exception ex)
+            {
+                _iNotyf.Error("Error system", 4);
+                return RedirectToAction(nameof(Index));
+            }
+        }
     }
 }

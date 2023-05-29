@@ -5,6 +5,7 @@ using AutoMapper;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Domain.Entities.Product;
+using Domain.EnumStatus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -180,6 +181,22 @@ namespace Application.Applications
                 var product = await _iProductRepository.GetByIdAsync(id);
                 var result = _iMapper.Map<RequestUpdateProductDto>(product);
                 return result;
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            try
+            {
+                var product = await _iProductRepository.GetByIdAsync(id);
+                product.Status = (int)StatusProductEnum.close;
+                product.ModifiedDate = DateTime.Now;
+                await _iProductRepository.UpdateAsync(product);
+                return true;
             }
             catch(Exception ex)
             {

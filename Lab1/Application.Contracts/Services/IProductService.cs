@@ -14,6 +14,6 @@ namespace Application.Contracts.Services
         Task<bool> CreateAsync(RequestCreateProductDto input);
         Task<bool> UpdateAsync(RequestUpdateProductDto input);
         Task<RequestUpdateProductDto> GetByIdAsync(Guid id);
-
+        Task<bool> DeleteAsync(Guid id);
     }
 }
