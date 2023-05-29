@@ -22,6 +22,7 @@ namespace Application.ProfileMapper
             #endregion
             #region Product
             CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<Product, RequestCreateProductDto>().ReverseMap();
             #endregion
         }
     }

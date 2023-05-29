@@ -3,6 +3,7 @@ using Application.Contracts.Services;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using AutoMapper;
+using Azure.Storage.Blobs;
 using Domain.Entities.ApplicationUser;
 using Domain.Entities.Product;
 using Domain.Repository;
@@ -27,6 +28,9 @@ builder.Services.AddTransient<IApplicationUserRepository, ApplicationRepository>
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 #endregion
+// Add Blob service client
+builder.Services.AddSingleton(options => new BlobServiceClient(builder.Configuration.GetValue<string>("MangoConnection")));
+
 builder.Services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.BottomRight; });
 
 var app = builder.Build();

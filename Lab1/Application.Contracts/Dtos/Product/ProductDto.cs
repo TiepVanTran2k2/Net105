@@ -1,6 +1,9 @@
 ﻿using Domain.EnumStatus;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,5 +23,20 @@ namespace Application.Contracts.Dtos.Product
         public TypeProductEnum? Type { get; set; }
         public int? Skip { get; set; }
         public int? Take { get; set; }
+    }
+    public class RequestCreateProductDto
+    {
+        [Required(ErrorMessage = "Please input product name")]
+        public string Name { get; set; }
+        [Required(ErrorMessage = "Please choose file image")]
+        public IFormFile GetFile { get; set; }
+        public string UrlImg { get; set; }
+        public string ContainerName { get; set; }
+        [Required(ErrorMessage = "Please input price")]
+        public decimal? Price { get; set; }
+        public StatusProductEnum Status { get; set; }
+        [Required(ErrorMessage = "Please choose type product")]
+        public TypeProductEnum? Type { get; set; }
+        public string Description { get; set; }
     }
 }

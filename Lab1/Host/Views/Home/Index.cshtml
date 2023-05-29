@@ -16,7 +16,7 @@
                     <div class="col mb-5">
                             <div class="card h-100">
                                 <!-- Product image-->
-                                <img class="card-img-top" src="C:\Users\TranVanTiep\Downloads\z3613478398931_92699473511f794a4f2f9e4530ce4fc3.jpg" />
+                                <img class="card-img-top" src="@item.UrlImg" />
                                 <!-- Product details-->
                                 <div class="card-body p-4">
                                     <div class="text-center">
@@ -43,30 +43,32 @@
                     if(Model?.Payload != null)
                     {
                         <form asp-controller="Home" asp-action="Index" method="post">
-                            <input type="hidden" asp-for="@Model.Payload.Keyword" value="@Model.Payload.Keyword"/>
+                            <input hidden id="demo" asp-for="@Model.Payload.Skip" />
+                            <input hidden asp-for="@Model.Payload.Keyword" />
                             <nav aria-label="Page navigation example">
-                              @for(int i = 1; i <= (int)Model.PageCount; i++)
-                                {
-                                    <input  asp-for="@Model.Payload.Skip" value="@Model.Payload.Skip" />
-                                    <ul class="pagination">
-                                        <li class="page-item active"><input type="submit" class="page-link" value="@i"/></li>
-                                    </ul>                                               
-                                }  
-                            </nav> 
+                                <ul class="pagination">
+                                    @for (int i = 1; i <= Model.PageCount; i++)
+                                    {
+                                        <li class="page-item active" style="margin-left:1px"><input type="submit" id="@i" class="page-link" onclick="changePage(@i)" value="@i" /></li>
+                                    }
+                                </ul>
+                            </nav>
                         </form>
                     }
                     else
                     {
                         <form asp-controller="Home" asp-action="Index" method="post">
+                            <input hidden id="demo" asp-for="@Model.Payload.Skip" />
+                            <input hidden asp-for="@Model.Payload.Keyword" />
                             <nav aria-label="Page navigation example">
-                              @for(int i = 1; i <= Model.PageCount; i++)
-                                {
-                                    <ul class="pagination">
-                                        <li class="page-item active"><input type="submit" class="page-link" value="@i"/></li>
-                                    </ul>                                               
-                                }  
+                                <ul class="pagination">
+                                    @for (int i = 1; i <= Model.PageCount; i++)
+                                    {
+                                        <li class="page-item active"><input type="submit" id="@i" class="page-link" onclick="changePage(@i)" value="@i" /></li>
+                                    }
+                                </ul>                                 
                             </nav> 
-                    </form>
+                        </form>
                     }
 
                                         
@@ -96,4 +98,9 @@ file.addEventListener("change", function() {
   })
   reader.readAsDataURL(this.files[0]);
 })
+
+function changePage(Page){
+        document.getElementById('demo').value = Page;
+        documentgetElementById(Page).style.background = black;
+}
 </script>

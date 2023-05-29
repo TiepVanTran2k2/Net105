@@ -10,7 +10,7 @@ namespace Domain.Entities
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string? ModifiedId { get; set; }
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate { get; set; } = DateTime.Now;
         public DateTime? ModifiedDate { get; set; }
         public int Status { get; set; }
     }
