@@ -34,7 +34,7 @@
                         <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-success">Edit</a>
                     </td>
                     <td>
-                        <form asp-action="Index" method="post">
+                        <form asp-action="Update" method="post">
                             <input asp-for="@item.Id"/>
                             <input type="submit" value="Delete" class="btn btn-danger"/>
                         </form>

@@ -11,6 +11,7 @@ namespace Host.Controllers
         {
             _iLab4Service = lab4Service;
         }
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _iLab4Service.GetListAsync());
@@ -26,7 +27,7 @@ namespace Host.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
-        public async Task<IActionResult> Index(Lab4Dto input)
+        public IActionResult Update(Lab4Dto input)
         {
             return View();
         }
