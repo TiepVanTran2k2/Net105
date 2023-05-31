@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.ApplicationUser;
+using Domain.Entities.Lab4;
 using Domain.Entities.Product;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace EntityFrameworkCore.Entity
         }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Product> Product { get; set; }
+        public DbSet<lab4> Lab4 { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -5,6 +5,7 @@ using AspNetCoreHero.ToastNotification.Extensions;
 using AutoMapper;
 using Azure.Storage.Blobs;
 using Domain.Entities.ApplicationUser;
+using Domain.Entities.Lab4;
 using Domain.Entities.Product;
 using Domain.Repository;
 using Domain.Services;
@@ -16,7 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddAuthorization(option =>
+{
+    option.AddPolicy("create", policy =>
+    {
+        policy.RequireRole("sm");
+    });
+});
 #region DI
 builder.Services.AddDbContext<DbContextApp>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -27,6 +34,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkSto
 builder.Services.AddTransient<IApplicationUserRepository, ApplicationRepository>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<ILab4Service, Lab4Service>();
+builder.Services.AddTransient<ILab4Repository, Lab4Repository>();
 #endregion
 // Add Blob service client
 builder.Services.AddSingleton(options => new BlobServiceClient(builder.Configuration.GetValue<string>("MangoConnection")));

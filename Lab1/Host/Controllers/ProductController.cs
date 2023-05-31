@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Host.Controllers
 {
-    [Authorize(Roles = "sm")]
+    [Authorize(Policy = "create")]
     public class ProductController : Controller
     {
         private readonly IProductService _iProductService;

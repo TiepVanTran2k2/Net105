@@ -1,0 +1,46 @@
+﻿@using Application.Contracts.Dtos.Lab4
+@using Domain.Services
+@model List<Lab4Dto>
+@inject IHelperService _iHelperService
+
+@{
+    Layout = "_LayoutLab4";
+}
+<a asp-action="Create" class="btn btn-success">Create</a>
+<a asp-controller="Home" asp-action="Index" class="btn btn-success">Home</a>
+<table class="table">
+    <thead>
+        <tr>
+            @foreach (var item in _iHelperService.GetListNameFieldAsync<Lab4Dto>())
+            {
+                if (item != "Id")
+                {
+                    <th>@item</th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Skill</td>
+                    <td>@item.Salary</td>
+                    <td>@item.TotalStudent</td>
+                    <td>
+                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-success">Edit</a>
+                    </td>
+                    <td>
+                        <form asp-action="Index" method="post">
+                            <input asp-for="@item.Id"/>
+                            <input type="submit" value="Delete" class="btn btn-danger"/>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

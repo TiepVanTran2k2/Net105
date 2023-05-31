@@ -1,10 +1,12 @@
 using Application.Applications;
 using Application.Contracts.Services;
 using AutoMapper;
+using Domain.Entities.Product;
 using Domain.Repository;
 using Domain.Services;
 using EntityFrameworkCore.Entity;
 using EntityFrameworkCore.Repository;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +17,9 @@ builder.Services.AddDbContext<DbContextApp>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 builder.Services.AddTransient<IHelperService, HelperService>();
-builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<DbContextApp>();
+
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
 #endregion
 
 builder.Services.AddControllers();
