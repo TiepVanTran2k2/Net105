@@ -11,5 +11,6 @@ namespace Application.Contracts.Services
     {
         Task<List<Lab4Dto>> GetListAsync();
         Task<bool> CreateAsync(Lab4Dto input);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

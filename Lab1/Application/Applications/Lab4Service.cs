@@ -29,6 +29,14 @@ namespace Application.Applications
             return true;
         }
 
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var item = await _iLab4Repository.GetByIdAsync(id);
+            item.Status = (int)StatusProductEnum.close;
+            await _iLab4Repository.UpdateAsync(item);
+            return true;
+        }
+
         public async Task<List<Lab4Dto>> GetListAsync()
         {
             var listStudent = (await _iLab4Repository.GetAllAsync()).Where(x => x.Status == (int)StatusProductEnum.open).ToList();

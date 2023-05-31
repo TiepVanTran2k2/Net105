@@ -26,10 +26,10 @@ namespace Host.Controllers
             await _iLab4Service.CreateAsync(input);
             return RedirectToAction(nameof(Index));
         }
-        [HttpPost]
-        public IActionResult Update(Lab4Dto input)
+        public async Task<IActionResult> Update(Guid id)
         {
-            return View();
+            await _iLab4Service.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
