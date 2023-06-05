@@ -1,9 +1,11 @@
 ﻿using Application.Contracts.Dtos.Lab4;
 using Application.Contracts.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Host.Controllers
 {
+    [Authorize]
     public class Lab4Controller : Controller
     {
         public readonly ILab4Service _iLab4Service;
