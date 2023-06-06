@@ -101,7 +101,15 @@
         $.ajax({
             url: '/Cart/AddItem',
             type: 'POST',
-            data: { "Id": Id}
-        })
+            data: { "Id": Id },
+            success: successFunc,
+            error: errorFunc
+        });
+        function successFunc(data, status) {     
+                alert('success');
+        }
+        function errorFunc() {
+                alert('error');
+        }     
     }
 </script>

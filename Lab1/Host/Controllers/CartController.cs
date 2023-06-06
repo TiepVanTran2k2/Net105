@@ -3,6 +3,8 @@ using Application.Contracts.Dtos;
 using Application.Contracts.Services;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Net.Mime;
 
 namespace Host.Controllers
 {
@@ -21,18 +23,17 @@ namespace Host.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AddItem(string Id)
+        public async Task<ActionResult> AddItem(string Id)
         {
             var result = await _iCartService.AddItemAsync(Guid.Parse(Id), User);
-            if (result)
+            if (!result)
             {
-                _iNotyfService.Success("Add success", 4);
-                return View();
+                //  Send "false"
+                return Json(new { success = false, responseText = "The attached file is not supported." });
             }
-            _iNotyfService.Warning("Add fail", 4);
-            return View();
+            //  Send "Success"
+            return Json(new { success = true, responseText = "Your message successfuly sent!" });
         }
-        [HttpGet]
         public async Task<IActionResult> GetListItemCache()
         {
             return View(await _iCartService.GetListProductCacheAysnc(User));

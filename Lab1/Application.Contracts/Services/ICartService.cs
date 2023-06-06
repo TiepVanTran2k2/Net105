@@ -12,5 +12,6 @@ namespace Application.Contracts.Services
     {
         Task<bool> AddItemAsync(Guid id, ClaimsPrincipal input);
         Task<List<ProductCacheDto>> GetListProductCacheAysnc(ClaimsPrincipal input);
+        Task<bool> UpdateUserIdCacheAsync(Guid userId);
     }
 }

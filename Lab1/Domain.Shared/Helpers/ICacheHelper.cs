@@ -10,5 +10,6 @@ namespace Domain.Shared.Helpers
     {
         TEntity GetAsync<TEntity>(string key) where TEntity : class;
         bool CreateAsync<TEntity>(TEntity entity, string key) where TEntity : class;
+        bool Remove(string key);
     }
 }

@@ -36,5 +36,11 @@ namespace Domain.Services
         {
             return _iMemoryCache.Get<TEntity>(key);
         }
+
+        public bool Remove(string key)
+        {
+            _iMemoryCache.Remove(key);
+            return true;
+        }
     }
 }

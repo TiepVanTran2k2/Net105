@@ -13,15 +13,18 @@ namespace Application.Applications
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IApplicationUserRepository _userRepository;
+        private readonly ICartService _iCartService;
         public ApplicationUserService(IMapper mapper,
                                       UserManager<IdentityUser> userManager,
                                       SignInManager<IdentityUser> signInManager,
-                                      IApplicationUserRepository userRepository)
+                                      IApplicationUserRepository userRepository,
+                                      ICartService iCartService)
         {
             _iMapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
             _userRepository = userRepository;
+            _iCartService = iCartService;
         }
 
         public async Task ForgotPasswordAsync(ForgotPassworDto input)
@@ -59,6 +62,8 @@ namespace Application.Applications
                 var result = await _signInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, loginDto.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var userId = (_userRepository.GetList()).First(x => x.Email == loginDto.UserName).Id;
+                    await _iCartService.UpdateUserIdCacheAsync(Guid.Parse(userId));
                     return true;
                 }
                 return false;

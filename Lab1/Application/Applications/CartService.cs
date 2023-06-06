@@ -33,10 +33,14 @@ namespace Application.Applications
         public async Task<bool> AddItemAsync(Guid id, ClaimsPrincipal input)
         {
             try
-            {
-                var dataCache = new ItemCacheDto();
+            {                
                 var userId = _userManager.GetUserId(input);
-
+                var dataCache = new ItemCacheDto()
+                {
+                    IdUser = !string.IsNullOrEmpty(userId) ? userId : Guid.Empty.ToString(),
+                    ListProductCache = new List<ProductCacheDto>()
+                };
+                
                 var product = await _iProductRepository.GetByIdAsync(id);
                 if(product == null)
                 {
@@ -66,7 +70,7 @@ namespace Application.Applications
                 else
                 {
                     result.Count = 1;
-                    dataCache.IdUser = userId != null ? userId.ToString() : string.Empty.ToString();
+                    dataCache.IdUser = userId != null ? userId.ToString() : Guid.Empty.ToString();
                     dataCache.ListProductCache = new List<ProductCacheDto> { result };
                 }
                 
@@ -90,6 +94,48 @@ namespace Application.Applications
                     return await Task.FromResult(new List<ProductCacheDto>());
                 }
                 return await Task.FromResult(dataCache.ListProductCache);
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<bool> UpdateUserIdCacheAsync(Guid userId)
+        {
+            try
+            {
+                var dataCacheUserIdEmpty = _iCacheHelper.GetAsync<ItemCacheDto>(Guid.Empty.ToString());
+                var dataCacheUserLogin = _iCacheHelper.GetAsync<ItemCacheDto>(userId.ToString());
+                if(dataCacheUserLogin != null)
+                {
+                    if(dataCacheUserIdEmpty != null)
+                    {
+                        var listIdDiff = dataCacheUserIdEmpty.ListProductCache.Select(x => x.Id).ToList()
+                                        .Except(dataCacheUserLogin.ListProductCache.Select(x => x.Id).ToList()).ToList();
+                        
+                        if(listIdDiff.Count == dataCacheUserIdEmpty.ListProductCache.Count)
+                        {
+                            dataCacheUserLogin.ListProductCache.AddRange(dataCacheUserIdEmpty.ListProductCache);
+                        }
+                        else
+                        {
+                            dataCacheUserLogin.ListProductCache.AddRange(dataCacheUserIdEmpty.ListProductCache.Where(x => listIdDiff.Contains(x.Id)).ToList());
+                        }
+                        
+                        _iCacheHelper.Remove(Guid.Empty.ToString());
+                    }
+                    _iCacheHelper.CreateAsync(dataCacheUserLogin, userId.ToString());
+                    return await Task.FromResult(true);
+
+                }
+                if (dataCacheUserIdEmpty != null)
+                {
+                    dataCacheUserIdEmpty.IdUser = userId.ToString();
+                    _iCacheHelper.CreateAsync(dataCacheUserIdEmpty, userId.ToString());
+                    _iCacheHelper.Remove(Guid.Empty.ToString());
+                }
+                return await Task.FromResult(true);
             }
             catch(Exception ex)
             {
