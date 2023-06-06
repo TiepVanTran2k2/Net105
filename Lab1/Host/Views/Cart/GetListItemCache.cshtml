@@ -1,4 +1,5 @@
 ﻿@using Application.Contracts.Dtos.Product
+@using Microsoft.AspNetCore.Identity
 @model List<ProductCacheDto>
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
@@ -81,7 +82,7 @@
                       <p class="mb-2">@(Model.Sum(x => x.Price * x.Count))$</p>
                     </div>
 
-                    <button type="button" class="btn btn-info btn-block btn-lg" onclick="payment(' @UserManager.Get ')">
+                    <button type="button" class="btn btn-info btn-block btn-lg" onclick="payment('@((await UserManager.GetUserAsync(User)).Id) ')">
                       <div class="d-flex justify-content-between">
                         <span>@(Model.Sum(x => x.Price * x.Count) * 23000) VNĐ</span>
                       </div>
@@ -102,6 +103,10 @@
 </section>
 
 <script>
-    var valuePayment = document.getElementById('PaymentOptions').value;
-    console.log(valuePayment);
+    function payment(UserId){
+        var valuePayment = document.getElementById('PaymentOptions').value;
+        console.log(valuePayment);
+        console.log(UserId);
+    }
+    
 </script>
