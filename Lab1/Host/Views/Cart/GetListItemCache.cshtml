@@ -1,5 +1,7 @@
 ﻿@using Application.Contracts.Dtos.Product
 @model List<ProductCacheDto>
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 @{
     Layout = "_LayoutCart";
@@ -63,15 +65,14 @@
 
                 <div class="card bg-primary text-white rounded-3">
                   <div class="card-body">
-                    <form class="mt-4">
+                    <form asp-controller="Payment" asp-action="CreateUrl" class="mt-4">
                          <div class="form-group">
                             <label for="ordertype">Payments</label>
-                            <select name="OrderType" id="ordertype" class="form-control">
-                                <option value="">Payment on delivery</option>
-                                <option value="">VnPay</option>
+                            <select id="PaymentOptions" class="form-control">
+                                <option value="0">Payment on delivery</option>
+                                <option value="1">VnPay</option>
                             </select>
                         </div>
-                    </form>
 
                     <hr class="my-4">
 
@@ -80,12 +81,12 @@
                       <p class="mb-2">@(Model.Sum(x => x.Price * x.Count))$</p>
                     </div>
 
-                    <button type="button" class="btn btn-info btn-block btn-lg">
+                    <button type="button" class="btn btn-info btn-block btn-lg" onclick="payment(' @UserManager.Get ')">
                       <div class="d-flex justify-content-between">
                         <span>@(Model.Sum(x => x.Price * x.Count) * 23000) VNĐ</span>
                       </div>
                     </button>
-
+                    </form>
                   </div>
                 </div>
 
@@ -99,3 +100,8 @@
     </div>
   </div>
 </section>
+
+<script>
+    var valuePayment = document.getElementById('PaymentOptions').value;
+    console.log(valuePayment);
+</script>
