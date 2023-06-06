@@ -113,14 +113,22 @@ namespace Application.Applications
                     {
                         var listIdDiff = dataCacheUserIdEmpty.ListProductCache.Select(x => x.Id).ToList()
                                         .Except(dataCacheUserLogin.ListProductCache.Select(x => x.Id).ToList()).ToList();
-                        
-                        if(listIdDiff.Count == dataCacheUserIdEmpty.ListProductCache.Count)
+                        if(listIdDiff.Count < dataCacheUserIdEmpty.ListProductCache.Count)
+                        {
+                            foreach (var item in dataCacheUserLogin.ListProductCache)
+                            {
+                                if (dataCacheUserIdEmpty.ListProductCache.Any(x => x.Id == item.Id))
+                                {
+                                    //dataCacheUserLogin.IdUser = userId.ToString();
+                                    item.Count += dataCacheUserIdEmpty.ListProductCache.First(x => x.Id == item.Id).Count;
+                                    continue;
+                                }
+                            }
+                            dataCacheUserLogin.ListProductCache.AddRange(dataCacheUserIdEmpty.ListProductCache.Where(x => listIdDiff.Contains(x.Id)).ToList());
+                        }
+                        if (listIdDiff.Count == dataCacheUserIdEmpty.ListProductCache.Count)
                         {
                             dataCacheUserLogin.ListProductCache.AddRange(dataCacheUserIdEmpty.ListProductCache);
-                        }
-                        else
-                        {
-                            dataCacheUserLogin.ListProductCache.AddRange(dataCacheUserIdEmpty.ListProductCache.Where(x => listIdDiff.Contains(x.Id)).ToList());
                         }
                         
                         _iCacheHelper.Remove(Guid.Empty.ToString());
