@@ -2,6 +2,7 @@
 @using Application.Contracts.Dtos.Product
 @model Paging<ProductDto, RequestGetListFilterProductDto>
 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <div class="container">
 
     <div id="content" class="my-5">
@@ -28,7 +29,10 @@
                                 </div>
                                 <!-- Product actions-->
                                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add cart</a></div>
+                                <div class="text-center">
+
+                                    <a class="btn btn-outline-dark mt-auto" onclick="PrdOnClick('@item.Id')">Add cart</a>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +92,16 @@
     })
 
     function changePage(Page) {
+        console.log(Page);
         document.getElementById('demo').value = Page;
         document.getElementById(Page).style.background = black;
+    }
+    function PrdOnClick(Id) {
+        console.log(Id);
+        $.ajax({
+            url: '/Cart/AddItem',
+            type: 'POST',
+            data: { "Id": Id}
+        })
     }
 </script>

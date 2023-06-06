@@ -18,6 +18,20 @@ namespace Application.Contracts.Dtos.Product
         public string UrlImg { get; set; }
         public decimal Price { get; set; }
     }
+    public class ItemCacheDto
+    {
+        public string IdUser { get; set; }
+        public List<ProductCacheDto> ListProductCache { get; set; }
+    }
+    public class ProductCacheDto
+    {
+        public Guid Id { get; set; }
+        public int Count { get; set; }
+        public string Name { get; set; }
+        public bool StatusItem { get; set; } = false;
+        public string UrlImg { get; set; }
+        public decimal Price { get; set; }
+    }
     public class RequestGetListFilterProductDto
     {
         public string Keyword { get; set; }

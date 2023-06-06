@@ -28,6 +28,9 @@ namespace Application.ProfileMapper
             CreateMap<Product, RequestUpdateProductDto>().ReverseMap();
             #endregion
             CreateMap<lab4, Lab4Dto>().ReverseMap();
+            #region Cart
+            CreateMap<Product, ProductCacheDto>().ReverseMap();
+            #endregion
         }
     }
 }

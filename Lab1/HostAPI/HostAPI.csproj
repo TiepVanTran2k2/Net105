@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.16" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 

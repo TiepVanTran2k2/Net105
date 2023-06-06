@@ -47,7 +47,22 @@ namespace Application.Applications
             }
             catch(Exception ex)
             {
+                throw ex.GetBaseException();
+            }
+        }
 
+        public async Task<PaymentResponseModel> PaymentExecute(IQueryCollection collections)
+        {
+            try
+            {
+                var pay = new VnPayLibrary();
+                var response = pay.GetFullResponseData(collections, _configuration["Vnpay:HashSecret"]);
+
+                return await Task.FromResult(response);
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
             }
         }
     }
