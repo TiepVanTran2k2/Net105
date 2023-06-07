@@ -1,8 +1,10 @@
 ﻿using Application.Contracts.Dtos.ApplicationUser;
+using Application.Contracts.Dtos.Bill;
 using Application.Contracts.Dtos.Lab4;
 using Application.Contracts.Dtos.Product;
 using AutoMapper;
 using Domain.Entities.ApplicationUser;
+using Domain.Entities.Bill;
 using Domain.Entities.Lab4;
 using Domain.Entities.Product;
 using Microsoft.AspNetCore.Identity;
@@ -30,6 +32,7 @@ namespace Application.ProfileMapper
             CreateMap<lab4, Lab4Dto>().ReverseMap();
             #region Cart
             CreateMap<Product, ProductCacheDto>().ReverseMap();
+            CreateMap<Bill, BillDto>().ReverseMap();
             #endregion
         }
     }

@@ -26,7 +26,7 @@ namespace Host.Controllers
         }
         public async Task<IActionResult> PaymentCallback()
         {
-            var response = _iVnPayService.PaymentExecute(Request.Query);
+            var response = await _iVnPayService.PaymentExecute(Request.Query);
             await _iCartService.RemoveCartAsync(User);
             return Json(response);
         }

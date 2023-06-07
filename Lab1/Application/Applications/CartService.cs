@@ -1,6 +1,8 @@
-﻿using Application.Contracts.Dtos.Product;
+﻿using Application.Contracts.Dtos.Bill;
+using Application.Contracts.Dtos.Product;
 using Application.Contracts.Services;
 using AutoMapper;
+using Domain.Entities.Bill;
 using Domain.Entities.Product;
 using Domain.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
@@ -20,15 +22,21 @@ namespace Application.Applications
         private readonly IProductRepository _iProductRepository;
         private readonly IMapper _iMapper;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IBillRepository _iBillRepository;
+        private readonly IBillDetailRepository _iBillDetailRepository;
         public CartService(ICacheHelper cacheHelper,
                            IProductRepository iProductRepository,
                            IMapper mapper,
-                           UserManager<IdentityUser> userManager)
+                           UserManager<IdentityUser> userManager,
+                           IBillRepository billRepository,
+                           IBillDetailRepository billDetailRepository)
         {
             _iCacheHelper = cacheHelper;
             _iProductRepository = iProductRepository; 
             _iMapper = mapper;
             _userManager = userManager;
+            _iBillRepository = billRepository;
+            _iBillDetailRepository = billDetailRepository;
         }
         public async Task<bool> AddItemAsync(Guid id, ClaimsPrincipal input)
         {
@@ -94,6 +102,25 @@ namespace Application.Applications
                     return await Task.FromResult(new List<ProductCacheDto>());
                 }
                 return await Task.FromResult(dataCache.ListProductCache);
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<bool> InsertOrderAsync(BillDto bill, ClaimsPrincipal input)
+        {
+            try
+            {
+                var userId = _userManager.GetUserId(input);
+                var dataCache = _iCacheHelper.GetAsync<ItemCacheDto>(userId);
+                if (dataCache == null)
+                {
+                    return true;
+                }
+                var billResult = _iMapper.Map<Bill>(bill);
+                await _iBillRepository.CreateAsync(billResult);
             }
             catch(Exception ex)
             {

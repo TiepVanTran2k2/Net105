@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Dtos.Product;
+﻿using Application.Contracts.Dtos.Bill;
+using Application.Contracts.Dtos.Product;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace Application.Contracts.Services
         Task<bool> UpdateUserIdCacheAsync(Guid userId);
         Task<bool> SyncDataCacheWithDbAsync(ClaimsPrincipal input);
         Task<bool> RemoveCartAsync(ClaimsPrincipal input);
+        Task<bool> InsertOrderAsync(BillDto bill, ClaimsPrincipal input);
     }
 }
