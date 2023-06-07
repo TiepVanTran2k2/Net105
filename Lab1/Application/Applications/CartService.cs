@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Dtos.Bill;
+using Application.Contracts.Dtos.Payment;
 using Application.Contracts.Dtos.Product;
 using Application.Contracts.Services;
 using AutoMapper;
@@ -96,7 +97,7 @@ namespace Application.Applications
             try
             {
                 var userId = _userManager.GetUserId(input);
-                var dataCache = _iCacheHelper.GetAsync<ItemCacheDto>(userId != null ? userId : string.Empty.ToString());
+                var dataCache = _iCacheHelper.GetAsync<ItemCacheDto>(userId != null ? userId : Guid.Empty.ToString());
                 if(dataCache == null)
                 {
                     return await Task.FromResult(new List<ProductCacheDto>());
@@ -109,7 +110,7 @@ namespace Application.Applications
             }
         }
 
-        public async Task<bool> InsertOrderAsync(BillDto bill, ClaimsPrincipal input)
+        public async Task<bool> InsertOrderAsync(PaymentResponseModel bill, ClaimsPrincipal input)
         {
             try
             {
@@ -120,7 +121,15 @@ namespace Application.Applications
                     return true;
                 }
                 var billResult = _iMapper.Map<Bill>(bill);
-                await _iBillRepository.CreateAsync(billResult);
+                billResult.UserId = userId;
+                var billInsert = await _iBillRepository.CreateAsync(billResult);
+                foreach(var item in dataCache.ListProductCache)
+                {
+                    var detailBill = _iMapper.Map<DetailBill>(item);
+                    detailBill.BillId = billInsert.Id;
+                    await _iBillDetailRepository.CreateAsync(detailBill);
+                }
+                return true;
             }
             catch(Exception ex)
             {
@@ -146,7 +155,7 @@ namespace Application.Applications
         {
             try
             {
-                var userId = _userManager.GetUserId(input);
+                var userId = _userManager.GetUserId(input) != null ? _userManager.GetUserId(input) : Guid.Empty.ToString();
                 var dataCache = _iCacheHelper.GetAsync<ItemCacheDto>(userId);
                 if(dataCache == null)
                 {

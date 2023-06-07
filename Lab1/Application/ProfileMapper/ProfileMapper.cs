@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.Dtos.ApplicationUser;
 using Application.Contracts.Dtos.Bill;
 using Application.Contracts.Dtos.Lab4;
+using Application.Contracts.Dtos.Payment;
 using Application.Contracts.Dtos.Product;
 using AutoMapper;
 using Domain.Entities.ApplicationUser;
@@ -33,6 +34,10 @@ namespace Application.ProfileMapper
             #region Cart
             CreateMap<Product, ProductCacheDto>().ReverseMap();
             CreateMap<Bill, BillDto>().ReverseMap();
+            CreateMap<ProductCacheDto, DetailBill>()
+                .ForPath(dest => dest.ProductId, opt => opt.MapFrom(src => src.Id))
+                .ReverseMap();
+            CreateMap<PaymentResponseModel, Bill>().ReverseMap();
             #endregion
         }
     }

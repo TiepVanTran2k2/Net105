@@ -94,13 +94,13 @@
                         </div>
 
                     <hr class="my-4">
-
+                    <input hidden id="User" value="@((await UserManager.GetUserAsync(User))?.Id)"/>
                     <div class="d-flex justify-content-between">
                       <p class="mb-2">Subtotal</p>
-                      <p class="mb-2">@(Model.Sum(x => x.Price * x.Count))$</p>
+                      <p class="mb-2">@(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count))$</p>
                     </div>
 
-                    <button type="button" class="btn btn-info btn-block btn-lg" onclick="payment('@((await UserManager.GetUserAsync(User)).Id) ')">
+                    <button id="checkoutBtn" type="button" class="btn btn-info btn-block btn-lg" onclick="payment('@((await UserManager.GetUserAsync(User))?.Id) ')">
                       <div class="d-flex justify-content-between">
                         <span>@(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count) * 23000) VNĐ</span>
                       </div>
@@ -121,6 +121,12 @@
 </section>
 
 <script>
+    var user = document.getElementById("User").value;
+    if (user === null) 
+    {
+        console.log("true");
+        document.getElementById('checkoutBtn').disabled = true
+    }
     function payment(UserId){
         var valuePayment = document.getElementById('PaymentOptions').value;
         console.log(valuePayment);

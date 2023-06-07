@@ -1,10 +1,12 @@
 ﻿using Application.Applications;
 using Application.Contracts.Dtos.Payment;
 using Application.Contracts.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Host.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
         private readonly IVnPayService _iVnPayService;
@@ -27,8 +29,9 @@ namespace Host.Controllers
         public async Task<IActionResult> PaymentCallback()
         {
             var response = await _iVnPayService.PaymentExecute(Request.Query);
+            await _iCartService.InsertOrderAsync(response, User);
             await _iCartService.RemoveCartAsync(User);
-            return Json(response);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
