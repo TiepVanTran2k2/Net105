@@ -6,6 +6,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Domain.Entities.Product;
 using Domain.EnumStatus;
+using Domain.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -23,15 +24,18 @@ namespace Application.Applications
         private readonly IMapper _iMapper;
         private readonly BlobServiceClient _blobServiceClient;
         private readonly IConfiguration _configuration;
+        private readonly ICacheHelper _iCacheHelper;
         public ProductService(IProductRepository productRepository,
                               IMapper mapper,
                               BlobServiceClient blobServiceClient,
-                              IConfiguration configuration)
+                              IConfiguration configuration,
+                              ICacheHelper cacheHelper)
         {
             _iProductRepository = productRepository;
             _iMapper = mapper;
             _blobServiceClient = blobServiceClient;
             _configuration = configuration;
+            _iCacheHelper = cacheHelper;
         }
 
         public async Task<bool> CreateAsync(RequestCreateProductDto input)
@@ -103,7 +107,7 @@ namespace Application.Applications
         {
             try
             {
-                var listProduct = (await _iProductRepository.GetAllAsync());
+                var listProduct = (await _iProductRepository.GetAllAsync()).Where(x => x.Status == (int)StatusProductEnum.open).ToList();
                 if(input?.Payload?.Keyword != null)
                 {
                     listProduct = listProduct?.Where(x => x.Name.ToLower().Contains(input.Payload.Keyword.ToLower())).ToList();

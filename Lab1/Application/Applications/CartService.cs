@@ -101,6 +101,48 @@ namespace Application.Applications
             }
         }
 
+        public async Task<bool> RemoveCartAsync(ClaimsPrincipal input)
+        {
+            try
+            {
+                var userId = _userManager.GetUserId(input);
+                _iCacheHelper.Remove(userId);
+                return await Task.FromResult(true);
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<bool> SyncDataCacheWithDbAsync(ClaimsPrincipal input)
+        {
+            try
+            {
+                var userId = _userManager.GetUserId(input);
+                var dataCache = _iCacheHelper.GetAsync<ItemCacheDto>(userId);
+                if(dataCache == null)
+                {
+                    return await Task.FromResult(false);
+                }
+                var listIdItem = dataCache.ListProductCache.Select(x => x.Id).ToList();
+                var listProductDb = (await _iProductRepository.GetAllAsync()).Where(x => listIdItem.Contains(x.Id)).ToList();
+                var dataCacheNew = _iMapper.Map<List<ProductCacheDto>>(listProductDb);
+                foreach(var item in dataCacheNew)
+                {
+                    item.Count = dataCache.ListProductCache.FirstOrDefault(x => x.Id == item.Id).Count;
+                }
+                dataCache.ListProductCache = dataCacheNew;
+                _iCacheHelper.Remove(userId);
+                _iCacheHelper.CreateAsync(dataCache, userId);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
         public async Task<bool> UpdateUserIdCacheAsync(Guid userId)
         {
             try

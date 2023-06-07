@@ -13,5 +13,7 @@ namespace Application.Contracts.Services
         Task<bool> AddItemAsync(Guid id, ClaimsPrincipal input);
         Task<List<ProductCacheDto>> GetListProductCacheAysnc(ClaimsPrincipal input);
         Task<bool> UpdateUserIdCacheAsync(Guid userId);
+        Task<bool> SyncDataCacheWithDbAsync(ClaimsPrincipal input);
+        Task<bool> RemoveCartAsync(ClaimsPrincipal input);
     }
 }

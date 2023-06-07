@@ -41,6 +41,7 @@ builder.Services.AddTransient<ILab4Service, Lab4Service>();
 builder.Services.AddTransient<ILab4Repository, Lab4Repository>();
 builder.Services.AddTransient<ICartService, CartService>();
 builder.Services.AddTransient<ICacheHelper, CacheHelper>();
+builder.Services.AddTransient<IVnPayService, VnPayService>();
 #endregion
 // Add Blob service client
 builder.Services.AddSingleton(options => new BlobServiceClient(builder.Configuration.GetValue<string>("MangoConnection")));

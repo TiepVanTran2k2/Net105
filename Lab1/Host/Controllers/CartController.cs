@@ -36,6 +36,7 @@ namespace Host.Controllers
         }
         public async Task<IActionResult> GetListItemCache()
         {
+            await _iCartService.SyncDataCacheWithDbAsync(User);
             return View(await _iCartService.GetListProductCacheAysnc(User));
         }
     }

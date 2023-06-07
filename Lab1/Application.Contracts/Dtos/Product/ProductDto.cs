@@ -28,7 +28,7 @@ namespace Application.Contracts.Dtos.Product
         public Guid Id { get; set; }
         public int Count { get; set; }
         public string Name { get; set; }
-        public bool StatusItem { get; set; } = false;
+        public StatusProductEnum Status { get; set; }
         public string UrlImg { get; set; }
         public decimal Price { get; set; }
     }

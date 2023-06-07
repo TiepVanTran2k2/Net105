@@ -1,4 +1,5 @@
-﻿using Application.Contracts.Dtos.Payment;
+﻿using Application.Applications;
+using Application.Contracts.Dtos.Payment;
 using Application.Contracts.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,14 +8,27 @@ namespace Host.Controllers
     public class PaymentController : Controller
     {
         private readonly IVnPayService _iVnPayService;
-        public PaymentController(IVnPayService vnPayService)
+        private readonly ICartService _iCartService;
+        public PaymentController(IVnPayService vnPayService,
+                                 ICartService cartService)
         {
             _iVnPayService = vnPayService;
+            _iCartService = cartService;
         }
-        public IActionResult CreateUrl(PaymentInformationModel model)
+        public ActionResult CreateUrl(PaymentInformationModel model)
         {
             var url = _iVnPayService.CreatePaymentUrl(model, HttpContext);
-            return View(url);
+            if (!string.IsNullOrEmpty(url))
+            {
+                return Json(new { success = true, responseText = url });
+            }
+            return Json(new { success = false});
+        }
+        public async Task<IActionResult> PaymentCallback()
+        {
+            var response = _iVnPayService.PaymentExecute(Request.Query);
+            await _iCartService.RemoveCartAsync(User);
+            return Json(response);
         }
     }
 }
