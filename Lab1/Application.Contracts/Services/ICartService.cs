@@ -18,5 +18,6 @@ namespace Application.Contracts.Services
         Task<bool> SyncDataCacheWithDbAsync(ClaimsPrincipal input);
         Task<bool> RemoveCartAsync(ClaimsPrincipal input);
         Task<bool> InsertOrderAsync(PaymentResponseModel bill, ClaimsPrincipal input);
+        Task<List<BillDto>> HistoryBillAsync(ClaimsPrincipal input);
     }
 }

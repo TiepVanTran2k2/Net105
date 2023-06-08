@@ -5,6 +5,7 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Mime;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Host.Controllers
 {
@@ -38,6 +39,11 @@ namespace Host.Controllers
         {
             await _iCartService.SyncDataCacheWithDbAsync(User);
             return View(await _iCartService.GetListProductCacheAysnc(User));
+        }
+        [HttpGet]
+        public async Task<IActionResult> HistoryPayment()
+        {
+            return View(await _iCartService.HistoryBillAsync(User));
         }
     }
 }

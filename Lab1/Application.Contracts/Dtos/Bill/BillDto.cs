@@ -17,4 +17,11 @@ namespace Application.Contracts.Dtos.Bill
         public string Token { get; set; }
         public string VnPayResponseCode { get; set; }
     }
+    public class DetailBillDto
+    {
+        public int Count { get; set; }
+        public string Name { get; set; }
+        public string UrlImg { get; set; }
+        public decimal Price { get; set; }
+    }
 }

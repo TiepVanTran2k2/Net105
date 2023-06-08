@@ -50,13 +50,15 @@
                             <input hidden id="demo" asp-for="@Model.Payload.Skip" />
                             <input hidden asp-for="@Model.Payload.Keyword" />
                             <nav aria-label="Page navigation example">
-                                <ul class="pagination">
+                                <ul class="pagination justify-content-end">
                                     @for (int i = 1; i <= Model.PageCount; i++)
-                                    {
-                                        <li class="page-item active" style="margin-left:1px"><input type="submit" id="@i" class="page-link" onclick="changePage(@i)" value="@i" /></li>
+                                    {                                          
+                                       <li class="page-item">
+                                           <input type="submit" id="@i" class="page-link" onclick="changePage(@i)" value="@i" />
+                                       </li>                                        
                                     }
-                                </ul>
-                            </nav>
+                                </ul>                                 
+                            </nav> 
                         </form>
                     }
                     else
@@ -65,10 +67,12 @@
                             <input hidden id="demo" asp-for="@Model.Payload.Skip" />
                             <input hidden asp-for="@Model.Payload.Keyword" />
                             <nav aria-label="Page navigation example">
-                                <ul class="pagination">
+                                <ul class="pagination justify-content-end">
                                     @for (int i = 1; i <= Model.PageCount; i++)
-                                    {
-                                        <li class="page-item active"><input type="submit" id="@i" class="page-link" onclick="changePage(@i)" value="@i" /></li>
+                                    {                                          
+                                       <li class="page-item">
+                                           <input type="submit" id="@i" class="page-link" onclick="changePage(@i)" value="@i" />
+                                       </li>                                        
                                     }
                                 </ul>                                 
                             </nav> 
@@ -110,7 +114,11 @@
                 alert('error');
         }   
         function successFunc(data, status) {
-            alert('success');
+            Swal.fire(
+                        'Success',
+                        'Add cart',
+                        'success'
+                        )
         }
     }
 </script>

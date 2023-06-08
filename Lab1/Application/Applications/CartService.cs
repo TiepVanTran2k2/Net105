@@ -110,6 +110,21 @@ namespace Application.Applications
             }
         }
 
+        public async Task<List<BillDto>> HistoryBillAsync(ClaimsPrincipal input)
+        {
+            try
+            {
+                var userId = _userManager.GetUserId(input);
+                var bill = (await _iBillRepository.GetAllAsync()).Where(x => x.UserId == userId).ToList();
+                var result = _iMapper.Map<List<BillDto>>(bill);
+                return result;
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
         public async Task<bool> InsertOrderAsync(PaymentResponseModel bill, ClaimsPrincipal input)
         {
             try

@@ -19,7 +19,7 @@
             <div class="row">
 
               <div class="col-lg-7">
-                <h5 class="mb-3"><a href="#!" class="text-body"><i
+                <h5 class="mb-3"><a href="https://localhost:7071/" class="text-body"><i
                       class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
                 <hr>
 
@@ -122,32 +122,51 @@
 
 <script>
     var user = document.getElementById("User").value;
-    if (user === null) 
-    {
-        console.log("true");
-        document.getElementById('checkoutBtn').disabled = true
-    }
     function payment(UserId){
-        var valuePayment = document.getElementById('PaymentOptions').value;
-        console.log(valuePayment);
-        console.log(UserId);
-        var model = {
-            "OrderType": "Digital",
-            "OrderDescription": ""+UserId,
-            "Name": "UserId:",
-            "Amount": @(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count) * 23000)
+        if (@(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count) * 23000) <5000) {
+            Swal.fire(
+            'Warning',
+            'Please payment with total money greater than 5000vnđ',
+            'warning'
+            )
         }
-        console.log(model);
-        $.ajax({
-            url: '/Payment/CreateUrl',
-            type: 'POST',
-            data: model,
-            success: successFunc,
-        });
+        else 
+        {
+            var valuePayment = document.getElementById('PaymentOptions').value;
+            console.log(valuePayment);
+            console.log(UserId);
+            var model = {
+                "OrderType": "Digital",
+                "OrderDescription": ""+UserId,
+                "Name": "UserId:",
+                "Amount": @(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count) * 23000)
+            }
+            console.log(model);
+            $.ajax({
+                url: '/Payment/CreateUrl',
+                type: 'POST',
+                data: model,
+                success: successFunc,
+                error: errorFunc
+            });
 
-        function successFunc(data, status) {
-            window.open(data.responseText);
+            function successFunc(data, status) {
+                window.location = data.responseText;
+            }
+            function errorFunc(data, status) {
+                if (data.status == 401) {
+                    window.location = "/Account/Login";
+                }
+                else 
+                {
+                    Swal.fire(
+                        'Error',
+                        'Error system',
+                        'error'
+                        )
+                }
+            }
         }
-        }
+    }
     
 </script>
