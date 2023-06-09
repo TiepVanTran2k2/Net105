@@ -33,11 +33,15 @@ namespace Application.ProfileMapper
             CreateMap<lab4, Lab4Dto>().ReverseMap();
             #region Cart
             CreateMap<Product, ProductCacheDto>().ReverseMap();
-            CreateMap<Bill, BillDto>().ReverseMap();
+            CreateMap<Bill, BillDto>()
+                .ForPath(dest => dest.DetailBillDto, opt => opt.MapFrom(src => src.DetailBill))
+                .ReverseMap();
+            CreateMap<DetailBill, DetailBillDto>().ReverseMap();
             CreateMap<ProductCacheDto, DetailBill>()
                 .ForPath(dest => dest.ProductId, opt => opt.MapFrom(src => src.Id))
                 .ReverseMap();
-            CreateMap<PaymentResponseModel, Bill>().ReverseMap();
+            CreateMap<PaymentResponseModel, Bill>()
+                .ReverseMap();
             #endregion
         }
     }

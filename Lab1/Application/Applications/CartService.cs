@@ -8,6 +8,7 @@ using Domain.Entities.Product;
 using Domain.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -116,7 +117,32 @@ namespace Application.Applications
             {
                 var userId = _userManager.GetUserId(input);
                 var bill = (await _iBillRepository.GetAllAsync()).Where(x => x.UserId == userId).ToList();
-                var result = _iMapper.Map<List<BillDto>>(bill);
+                
+                if (!bill.Any())
+                {
+                    return new List<BillDto>();
+                }
+                var billDetail = (await _iBillDetailRepository.GetAllAsync()).Where(x => bill.Select(a => a.Id).Contains(x.BillId)).ToList();
+                var listBill = bill.Join(billDetail, b => b.Id, bd => bd.BillId,
+                                                     (b, db) => new 
+                                                     {
+                                                         B = b,
+                                                         BD = db
+                                                     }  
+                                         ).GroupBy(x => x.B).Select(x => new Bill
+                                         {
+                                             OrderDescription = x.Key.OrderDescription,
+                                             OrderId = x.Key.OrderId,
+                                             PaymentId = x.Key.PaymentId,
+                                             PaymentMethod = x.Key.PaymentMethod,
+                                             Success = x.Key.Success,
+                                             Token = x.Key.Token,
+                                             TransactionId = x.Key.TransactionId,
+                                             VnPayResponseCode = x.Key.VnPayResponseCode,
+                                             DetailBill = x.Select(a => a.BD).ToList()
+                                         }).ToList();
+
+                var result = _iMapper.Map<List<BillDto>>(listBill);
                 return result;
             }
             catch(Exception ex)

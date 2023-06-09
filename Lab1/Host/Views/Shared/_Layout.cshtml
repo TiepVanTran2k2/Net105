@@ -32,15 +32,15 @@
                             if(listRole.Any(x => x == "sm"))
                             {
                                 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Manager</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" asp-controller="Product" asp-action="Index">Menu</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">User</a></li>
-                                <li><a class="dropdown-item" href="#!">Order</a></li>
-                            </ul>
-                        </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Manager</a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" asp-controller="Product" asp-action="Index">Menu</a></li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li><a class="dropdown-item" href="#!">User</a></li>
+                                        <li><a class="dropdown-item" href="#!">Order</a></li>
+                                    </ul>
+                                </li>
                             }
                             else
                             {
@@ -64,9 +64,11 @@
                     </ul>
                     <div class="d-flex">
                         <a class="btn btn-outline-dark" asp-controller="Cart" asp-action="GetListItemCache">
-                            <i class="bi-cart-fill me-1"></i>
-                            Cart
+                            <i class="bi bi-bag-fill"></i>
                         </a>
+                    </div>
+                    <div class="d-flex">
+                        <a class="btn btn-outline-dark" href="https://localhost:7071/cart/historypayment"> <i class="bi bi-clock-history"></i></a>
                     </div>
                 </div>
             </div>
