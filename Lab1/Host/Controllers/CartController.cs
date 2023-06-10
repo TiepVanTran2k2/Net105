@@ -67,7 +67,7 @@ namespace Host.Controllers
         [HttpPost]
         public async Task<ItemCacheDto> ChangeCountProductCache(RequestChangeCountProductCacheDto input)
         {
-            return await _iCartService.ChangeCountAsync(input);
+            return await _iCartService.ChangeCountAsync(input, User);
         }
     }
 }

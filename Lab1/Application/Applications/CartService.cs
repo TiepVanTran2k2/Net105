@@ -93,12 +93,15 @@ namespace Application.Applications
             }
         }
 
-        public async Task<ItemCacheDto> ChangeCountAsync(RequestChangeCountProductCacheDto input)
+        public async Task<ItemCacheDto> ChangeCountAsync(RequestChangeCountProductCacheDto input, ClaimsPrincipal claims)
         {
             try
             {
-                var userId = _userManager.GetUserId(input.User);
-                var dataOld = _iCacheHelper.GetAsync<ItemCacheDto>(userId);
+                var dataOld = _iCacheHelper.GetAsync<ItemCacheDto>(input.UserId);
+                if(dataOld == null)
+                {
+                    return new ItemCacheDto();
+                }
                 foreach(var item in dataOld.ListProductCache)
                 {
                     if(item.Id == input.ProductId)
@@ -107,9 +110,9 @@ namespace Application.Applications
                         break;
                     }
                 }
-                _iCacheHelper.Remove(userId);
-                _iCacheHelper.CreateAsync(dataOld, userId);
-                var dataSyncNew = await SyncDataCacheWithDbAsync(input.User);
+                _iCacheHelper.Remove(input.UserId);
+                _iCacheHelper.CreateAsync(dataOld, input.UserId);
+                var dataSyncNew = await SyncDataCacheWithDbAsync(claims);
                 return dataSyncNew;
             }
             catch(Exception ex)

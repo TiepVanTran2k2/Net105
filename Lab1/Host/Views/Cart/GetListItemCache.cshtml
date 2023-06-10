@@ -104,7 +104,7 @@
 
                     <button id="checkoutBtn" type="button" class="btn btn-info btn-block btn-lg" onclick="payment('@((await UserManager.GetUserAsync(User))?.Id)')">
                       <div class="d-flex justify-content-between">
-                        <span>@(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count) * 23000) VNĐ</span>
+                        <span id="txtTotalMoney">@(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count) * 23000) VNĐ</span>
                       </div>
                     </button>
                     </form>
@@ -169,15 +169,35 @@
                 }
             }
         }
-    }
+};
 function changeNumber(userId, productId, price) {
     var value = document.getElementById('count_' + productId).value;
     document.getElementById('price_' + productId).innerHTML = (price * value).toFixed(2)+'$';
-    var modelChangeCount = {
-        "User": @(UserManager.GetUserId(User)),
+    var dataChange = {
+        "UserId": userId,
         "ProductId": productId,
         "Count": value
     };
-    console.log(modelChangeCount);
+    $.ajax({
+        type: "POST",
+        url: "/Cart/ChangeCountProductCache",
+        data: dataChange,
+        success: successFuncChangeCount
+    });
+    function successFuncChangeCount(data, status) 
+    {
+        if (data != null) 
+        {
+            let totalMoney = 0;
+            for (let item in data.listProductCache) 
+            {
+                if (data.listProductCache[item].status == 0) 
+                {
+                    totalMoney += data.listProductCache[item].count *  data.listProductCache[item].price
+                }
+            }
+            document.getElementById("txtTotalMoney").innerHTML = (totalMoney*23000).toFixed(2)+" VNĐ"
+        }
+    }
 }
 </script>
