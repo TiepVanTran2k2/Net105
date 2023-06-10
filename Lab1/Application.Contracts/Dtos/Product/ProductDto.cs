@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -70,5 +71,11 @@ namespace Application.Contracts.Dtos.Product
         [Required(ErrorMessage = "Please choose type product")]
         public TypeProductEnum? Type { get; set; }
         public string Description { get; set; }
+    }
+    public class RequestChangeCountProductCacheDto
+    {
+        public ClaimsPrincipal User { get; set; }
+        public Guid ProductId { get; set; }
+        public int Count { get; set; }
     }
 }

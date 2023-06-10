@@ -93,6 +93,31 @@ namespace Application.Applications
             }
         }
 
+        public async Task<ItemCacheDto> ChangeCountAsync(RequestChangeCountProductCacheDto input)
+        {
+            try
+            {
+                var userId = _userManager.GetUserId(input.User);
+                var dataOld = _iCacheHelper.GetAsync<ItemCacheDto>(userId);
+                foreach(var item in dataOld.ListProductCache)
+                {
+                    if(item.Id == input.ProductId)
+                    {
+                        item.Count = input.Count;
+                        break;
+                    }
+                }
+                _iCacheHelper.Remove(userId);
+                _iCacheHelper.CreateAsync(dataOld, userId);
+                var dataSyncNew = await SyncDataCacheWithDbAsync(input.User);
+                return dataSyncNew;
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
         public async Task<List<ProductCacheDto>> GetListProductCacheAysnc(ClaimsPrincipal input)
         {
             try
@@ -192,7 +217,7 @@ namespace Application.Applications
             }
         }
 
-        public async Task<bool> SyncDataCacheWithDbAsync(ClaimsPrincipal input)
+        public async Task<ItemCacheDto> SyncDataCacheWithDbAsync(ClaimsPrincipal input)
         {
             try
             {
@@ -200,7 +225,7 @@ namespace Application.Applications
                 var dataCache = _iCacheHelper.GetAsync<ItemCacheDto>(userId);
                 if(dataCache == null)
                 {
-                    return await Task.FromResult(false);
+                    return new ItemCacheDto();
                 }
                 var listIdItem = dataCache.ListProductCache.Select(x => x.Id).ToList();
                 var listProductDb = (await _iProductRepository.GetAllAsync()).Where(x => listIdItem.Contains(x.Id)).ToList();
@@ -212,7 +237,7 @@ namespace Application.Applications
                 dataCache.ListProductCache = dataCacheNew;
                 _iCacheHelper.Remove(userId);
                 _iCacheHelper.CreateAsync(dataCache, userId);
-                return true;
+                return await Task.FromResult(dataCache);
             }
             catch(Exception ex)
             {

@@ -64,7 +64,7 @@
                     </ul>
                     <div class="d-flex">
                         <a class="btn btn-outline-dark" asp-controller="Cart" asp-action="GetListItemCache">
-                            <i class="bi bi-bag-fill"></i>
+                            <i class="bi bi-bag-fill"></i><i id="countCart">(0)</i>
                         </a>
                     </div>
                     <div class="d-flex">
@@ -94,6 +94,17 @@
     @await Component.InvokeAsync("Notyf") 
 </body>
 </html>
+<script>
+    $.ajax({
+        url: '/Cart/GetCountCartUser',
+        type: 'GET',
+        success: successFunc
+    });
+    function successFunc(data, status) 
+    {
+        document.getElementById("countCart").innerHTML = '('+data+')'
+    }
+</script>
 
 
 

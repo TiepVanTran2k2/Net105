@@ -47,7 +47,9 @@
                             </div>
                             <div class="ms-3">
                               <h5>@item.Name</h5>
-                              <p class="small mb-0">Count: @item.Count</p>
+                            </div>
+                            <div class="ms-3">
+                              <input id="count_@item.Id" min="1" max="10" onchange="changeNumber('@((await UserManager.GetUserAsync(User))?.Id)', '@item.Id', '@item.Price')" style="width: 70px; margin-left: 50px" class="form-control" type="number" value="@item.Count"/>
                             </div>
                           </div>
                           <div class="d-flex flex-row align-items-center">                            
@@ -65,10 +67,10 @@
                           <div class="d-flex flex-row align-items-center">                            
                             <div style="width: 80px;">
                               @if(item.Status == (int)StatusProductEnum.open){
-                                  <h5 class="mb-0">@(item.Count * item.Price)$</h5>
+                                  <h5 id="price_@item.Id" class="mb-0">@(item.Count * item.Price)$</h5>
                               }
                               else{
-                                  <h5 class="mb-0">0$</h5>
+                                  <h5 id="price_@item.Id" class="mb-0">0$</h5>
                               }
                             </div>
                             <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
@@ -100,7 +102,7 @@
                       <p class="mb-2">@(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count))$</p>
                     </div>
 
-                    <button id="checkoutBtn" type="button" class="btn btn-info btn-block btn-lg" onclick="payment('@((await UserManager.GetUserAsync(User))?.Id) ')">
+                    <button id="checkoutBtn" type="button" class="btn btn-info btn-block btn-lg" onclick="payment('@((await UserManager.GetUserAsync(User))?.Id)')">
                       <div class="d-flex justify-content-between">
                         <span>@(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count) * 23000) VNĐ</span>
                       </div>
@@ -168,5 +170,14 @@
             }
         }
     }
-    
+function changeNumber(userId, productId, price) {
+    var value = document.getElementById('count_' + productId).value;
+    document.getElementById('price_' + productId).innerHTML = (price * value).toFixed(2)+'$';
+    var modelChangeCount = {
+        "User": @(UserManager.GetUserId(User)),
+        "ProductId": productId,
+        "Count": value
+    };
+    console.log(modelChangeCount);
+}
 </script>

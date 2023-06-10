@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Authorization;
+using Domain.Shared.Helpers;
+using Microsoft.AspNetCore.Identity;
 
 namespace Host.Controllers
 {
@@ -13,11 +15,17 @@ namespace Host.Controllers
     {
         private readonly ICartService _iCartService;
         private readonly INotyfService _iNotyfService;
+        private readonly ICacheHelper _iCacheService;
+        private readonly UserManager<IdentityUser> _userManager;
         public CartController(ICartService cartService,
-                              INotyfService notyfService)
+                              INotyfService notyfService,
+                              ICacheHelper cacheHelper,
+                              UserManager<IdentityUser> userManager)
         {
             _iCartService = cartService;
             _iNotyfService = notyfService;
+            _iCacheService = cacheHelper;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -44,6 +52,22 @@ namespace Host.Controllers
         public async Task<IActionResult> HistoryPayment()
         {
             return View(await _iCartService.HistoryBillAsync(User));
+        }
+        [HttpGet]
+        public async Task<int> GetCountCartUser()
+        {
+            var userId = _userManager.GetUserId(User);
+            var dataCache = _iCacheService.GetAsync<ItemCacheDto>(userId != null ? userId : Guid.Empty.ToString());
+            if(dataCache == null)
+            {
+                return await Task.FromResult(0);
+            }
+            return await Task.FromResult(dataCache.ListProductCache.Count);
+        }
+        [HttpPost]
+        public async Task<ItemCacheDto> ChangeCountProductCache(RequestChangeCountProductCacheDto input)
+        {
+            return await _iCartService.ChangeCountAsync(input);
         }
     }
 }

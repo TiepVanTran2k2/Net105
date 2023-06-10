@@ -115,10 +115,19 @@
         }   
         function successFunc(data, status) {
             Swal.fire(
-                        'Success',
-                        'Add cart',
-                        'success'
-                        )
+                'Success',
+                'Add cart',
+                'success'
+            );
+            $.ajax({
+                url: '/Cart/GetCountCartUser',
+                type: 'GET',
+                success: successFuncCount
+            });
+            function successFuncCount(data, status) 
+            {
+                document.getElementById("countCart").innerHTML = '('+data+')'
+            }
         }
     }
 </script>
