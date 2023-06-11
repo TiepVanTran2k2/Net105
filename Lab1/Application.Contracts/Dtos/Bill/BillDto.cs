@@ -17,6 +17,7 @@ namespace Application.Contracts.Dtos.Bill
         public string Token { get; set; }
         public string VnPayResponseCode { get; set; }
         public DateTime CreationDate { get; set; }
+        public int Status { get; set; }
         public List<DetailBillDto> DetailBillDto { get; set; }
     }
     public class DetailBillDto

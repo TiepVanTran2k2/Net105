@@ -20,5 +20,8 @@ namespace Application.Contracts.Services
         Task<bool> InsertOrderAsync(PaymentResponseModel bill, ClaimsPrincipal input);
         Task<List<BillDto>> HistoryBillAsync(ClaimsPrincipal input);
         Task<ItemCacheDto> ChangeCountAsync(RequestChangeCountProductCacheDto input, ClaimsPrincipal claims);
+        Task<List<ProductCacheDto>> RemoveItemCartAsync(ResponseRemoveItemCart input);
+        Task<List<BillDto>> ManagerBillAsync();
+        Task<ResponseChangeStatusBill> CheckStatusBillAsync(ResponseCheckStatusBillCart input);
     }
 }

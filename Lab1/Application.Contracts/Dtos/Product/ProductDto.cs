@@ -78,4 +78,19 @@ namespace Application.Contracts.Dtos.Product
         public Guid ProductId { get; set; }
         public int Count { get; set; }
     }
+    public class ResponseRemoveItemCart
+    {
+        public string Key { get; set; }
+        public Guid ProductId { get; set; }
+    }
+    public class ResponseCheckStatusBillCart
+    {
+        public int Status { get; set; }
+        public string OrderId { get; set; }
+    }
+    public class ResponseChangeStatusBill
+    {
+        public bool Status { get; set; }
+        public int? StatusBill { get; set; }
+    }
 }

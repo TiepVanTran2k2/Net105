@@ -23,62 +23,60 @@
                       class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
                 <hr>
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                  <div>
-                    <p class="mb-1">Shopping cart</p>
-                    <p class="mb-0">You have @Model.Count items in your cart</p>
-                  </div>
-                  <div>
-                    <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!"
-                        class="text-body">price <i class="fas fa-angle-down mt-1"></i></a></p>
-                  </div>
-                </div>
+                <ul id="listProduct" style="list-style-type: none;">
+                    @foreach (var item in Model)
+                    {
+                      <li id="div_@item.Id">
+                          <div class="card mb-3">
+                          <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                              <div class="d-flex flex-row align-items-center">
+                                <div>
+                                  <img
+                                    src="@item.UrlImg"
+                                    class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
+                                </div>
+                                <div class="ms-3">
+                                  <h5>@item.Name</h5>
+                                </div>
+                                <div class="ms-3">
+                                  <input id="count_@item.Id" min="1" max="10" onchange="changeNumber('@((await UserManager.GetUserAsync(User))?.Id)', '@item.Id', '@item.Price')" style="width: 70px; margin-left: 50px" class="form-control" type="number" value="@item.Count"/>
+                                </div>
+                              </div>
+                              <div class="d-flex flex-row align-items-center">                            
+                                <div style="width: 80px;">
+                                  @if(item.Status == (int)StatusProductEnum.open)
+                                  {
+                                      <h6 class="mb-0">Stocking</h6>
+                                  }
+                                  else{
+                                      <h6 class="mb-0">Out Stocking</h6>
+                                  }
+                                </div>
+                                <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
+                              </div>
+                              <div class="d-flex flex-row align-items-center">                            
+                                <div style="width: 80px;">
+                                  @if(item.Status == (int)StatusProductEnum.open){
+                                      <h5 id="price_@item.Id" class="mb-0">@(item.Count * item.Price)$</h5>
+                                  }
+                                  else{
+                                      <h5 id="price_@item.Id" class="mb-0">0$</h5>
+                                  }
+                                </div>
+                                <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
+                              </div>
 
-                @foreach (var item in Model)
-                {
-                    <div class="card mb-3">
-                      <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                          <div class="d-flex flex-row align-items-center">
-                            <div>
-                              <img
-                                src="@item.UrlImg"
-                                class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
+                              <div class="d-flex flex-row align-items-center">                            
+                            
+                                <a class="btn btn-danger"  onclick="cancelProduct('@(UserManager.GetUserId(User) != null ? UserManager.GetUserId(User) : Guid.Empty)', '@item.Id')"><i class="bi bi-x-square-fill"></i></a>
+                              </div>
                             </div>
-                            <div class="ms-3">
-                              <h5>@item.Name</h5>
-                            </div>
-                            <div class="ms-3">
-                              <input id="count_@item.Id" min="1" max="10" onchange="changeNumber('@((await UserManager.GetUserAsync(User))?.Id)', '@item.Id', '@item.Price')" style="width: 70px; margin-left: 50px" class="form-control" type="number" value="@item.Count"/>
-                            </div>
-                          </div>
-                          <div class="d-flex flex-row align-items-center">                            
-                            <div style="width: 80px;">
-                              @if(item.Status == (int)StatusProductEnum.open)
-                              {
-                                  <h6 class="mb-0">Stocking</h6>
-                              }
-                              else{
-                                  <h6 class="mb-0">Out Stocking</h6>
-                              }
-                            </div>
-                            <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
-                          </div>
-                          <div class="d-flex flex-row align-items-center">                            
-                            <div style="width: 80px;">
-                              @if(item.Status == (int)StatusProductEnum.open){
-                                  <h5 id="price_@item.Id" class="mb-0">@(item.Count * item.Price)$</h5>
-                              }
-                              else{
-                                  <h5 id="price_@item.Id" class="mb-0">0$</h5>
-                              }
-                            </div>
-                            <a href="#!" style="color: #cecece;"><i class="fas fa-trash-alt"></i></a>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                }                
+                      </li>
+                    }
+                </ul>                
 
               </div>
 
@@ -90,7 +88,6 @@
                          <div class="form-group">
                             <label for="ordertype">Payments</label>
                             <select id="PaymentOptions" class="form-control">
-                                <option value="0">Payment on delivery</option>
                                 <option value="1">VnPay</option>
                             </select>
                         </div>
@@ -99,7 +96,7 @@
                     <input hidden id="User" value="@((await UserManager.GetUserAsync(User))?.Id)"/>
                     <div class="d-flex justify-content-between">
                       <p class="mb-2">Subtotal</p>
-                      <p class="mb-2">@(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count))$</p>
+                      <p class="mb-2" id="totalDolar">@(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count))$</p>
                     </div>
 
                     <button id="checkoutBtn" type="button" class="btn btn-info btn-block btn-lg" onclick="payment('@((await UserManager.GetUserAsync(User))?.Id)')">
@@ -198,6 +195,37 @@ function changeNumber(userId, productId, price) {
             }
             document.getElementById("txtTotalMoney").innerHTML = (totalMoney*23000).toFixed(2)+" VNĐ"
         }
+    }    
+}
+function cancelProduct(userId, productId) 
+{
+    
+    var dataRemove = {
+        "Key": userId,
+        "ProductId": productId
+    };
+    $.ajax({
+        type: "POST",
+        url: "/Cart/RemoveProductCache",
+        data: dataRemove,
+        success: successRemoveItem
+    });
+    function successRemoveItem(data, status) {
+        var listProduct = document.getElementById("listProduct");
+        var li = "div_" + productId;
+        var product = document.getElementById(li);
+        listProduct.removeChild(product);
+        console.log(data);
+        let totalMoney = 0;
+        for (let item in data) 
+        {
+            if (data[item].status == 0) 
+            {
+               totalMoney += data[item].count *  data[item].price
+            }       
+        }    
+        document.getElementById("txtTotalMoney").innerHTML = (totalMoney*23000).toFixed(2)+" VNĐ";
+        document.getElementById("totalDolar").innerHTML = totalMoney.toFixed(2)+"$";
     }
 }
 </script>

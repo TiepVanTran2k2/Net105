@@ -1,6 +1,7 @@
 ﻿using Application.Contracts.Dtos.Bill;
 using Application.Contracts.Dtos.Payment;
 using Application.Contracts.Dtos.Product;
+using Application.Contracts.EnumStatus;
 using Application.Contracts.Services;
 using AutoMapper;
 using Domain.Entities.Bill;
@@ -121,6 +122,36 @@ namespace Application.Applications
             }
         }
 
+        public async Task<ResponseChangeStatusBill> CheckStatusBillAsync(ResponseCheckStatusBillCart input)
+        {
+            var bill = (await _iBillRepository.GetAllAsync()).FirstOrDefault(x => x.OrderId == input.OrderId);
+            if(bill == null)
+            {
+                return new ResponseChangeStatusBill
+                {
+                    Status = false
+                };
+            }
+            switch (bill.Status)
+            {
+                case (int)StatusBillEnum.Paid:
+                    bill.Status = (int)StatusBillEnum.Delivering;
+                    break;
+                case (int)StatusBillEnum.Unpaid:
+                    bill.Status = (int)StatusBillEnum.Delivering;
+                    break;
+                default:
+                    bill.Status = (int)StatusBillEnum.Success;
+                    break;
+            }
+            await _iBillRepository.UpdateAsync(bill);
+            return new ResponseChangeStatusBill
+            {
+                Status = true,
+                StatusBill = bill.Status
+            };
+        }
+
         public async Task<List<ProductCacheDto>> GetListProductCacheAysnc(ClaimsPrincipal input)
         {
             try
@@ -167,7 +198,9 @@ namespace Application.Applications
                                              Token = x.Key.Token,
                                              TransactionId = x.Key.TransactionId,
                                              VnPayResponseCode = x.Key.VnPayResponseCode,
-                                             DetailBill = x.Select(a => a.BD).ToList()
+                                             DetailBill = x.Select(a => a.BD).ToList(),
+                                             Status = x.Key.Status,
+                                             CreationDate = x.Key.CreationDate
                                          }).ToList();
 
                 var result = _iMapper.Map<List<BillDto>>(listBill);
@@ -191,11 +224,13 @@ namespace Application.Applications
                 }
                 var billResult = _iMapper.Map<Bill>(bill);
                 billResult.UserId = userId;
+                billResult.Status = (int)StatusBillEnum.Paid;
                 var billInsert = await _iBillRepository.CreateAsync(billResult);
                 foreach(var item in dataCache.ListProductCache)
                 {
                     var detailBill = _iMapper.Map<DetailBill>(item);
                     detailBill.BillId = billInsert.Id;
+                    detailBill.Id = Guid.NewGuid();
                     await _iBillDetailRepository.CreateAsync(detailBill);
                 }
                 return true;
@@ -206,6 +241,39 @@ namespace Application.Applications
             }
         }
 
+        public async Task<List<BillDto>> ManagerBillAsync()
+        {
+            var listBill = (await _iBillRepository.GetAllAsync());
+            if (!listBill.Any())
+            {
+                return new List<BillDto>();
+            }
+            var listBillDetail = (await _iBillDetailRepository.GetAllAsync());
+            var result = listBill.Join(listBillDetail, b => b.Id, c => c.BillId,
+                                                        (b, bd) => new
+                                                        {
+                                                            B = b,
+                                                            BD = bd
+                                                        })
+                                 .GroupBy(x => x.B).Select(x => new Bill
+                                 {
+                                     OrderDescription = x.Key.OrderDescription,
+                                     OrderId = x.Key.OrderId,
+                                     PaymentId = x.Key.PaymentId,
+                                     PaymentMethod = x.Key.PaymentMethod,
+                                     Success = x.Key.Success,
+                                     Token = x.Key.Token,
+                                     TransactionId = x.Key.TransactionId,
+                                     VnPayResponseCode = x.Key.VnPayResponseCode,
+                                     DetailBill = x.Select(a => a.BD).ToList(),
+                                     Status = x.Key.Status,
+                                     CreationDate = x.Key.CreationDate
+                                 }).
+                                 OrderByDescending(x => x.CreationDate).
+                                 ThenBy(x => x.Status).ToList();
+            return _iMapper.Map<List<BillDto>>(result);
+        }
+
         public async Task<bool> RemoveCartAsync(ClaimsPrincipal input)
         {
             try
@@ -213,6 +281,26 @@ namespace Application.Applications
                 var userId = _userManager.GetUserId(input);
                 _iCacheHelper.Remove(userId);
                 return await Task.FromResult(true);
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<List<ProductCacheDto>> RemoveItemCartAsync(ResponseRemoveItemCart input)
+        {
+            try
+            {
+                var dataCache = _iCacheHelper.GetAsync<ItemCacheDto>(input.Key);
+                if(dataCache == null)
+                {
+                    return await Task.FromResult(new List<ProductCacheDto>());
+                }
+                dataCache.ListProductCache.Remove(dataCache.ListProductCache.First(x => x.Id == input.ProductId));
+                _iCacheHelper.Remove(input.Key);
+                _iCacheHelper.CreateAsync(dataCache, input.Key);
+                return dataCache.ListProductCache;
             }
             catch(Exception ex)
             {

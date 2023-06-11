@@ -38,7 +38,7 @@ namespace Application.ProfileMapper
                 .ReverseMap();
             CreateMap<DetailBill, DetailBillDto>().ReverseMap();
             CreateMap<ProductCacheDto, DetailBill>()
-                .ForPath(dest => dest.ProductId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Id))
                 .ReverseMap();
             CreateMap<PaymentResponseModel, Bill>()
                 .ReverseMap();

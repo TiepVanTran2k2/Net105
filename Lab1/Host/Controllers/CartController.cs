@@ -69,5 +69,10 @@ namespace Host.Controllers
         {
             return await _iCartService.ChangeCountAsync(input, User);
         }
+        [HttpPost]
+        public async Task<List<ProductCacheDto>> RemoveProductCache(ResponseRemoveItemCart input)
+        {
+            return await _iCartService.RemoveItemCartAsync(input);
+        }
     }
 }
