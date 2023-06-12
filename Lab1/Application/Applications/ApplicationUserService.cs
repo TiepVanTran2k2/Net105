@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Dtos.ApplicationUser;
+using Application.Contracts.Dtos.User;
 using Application.Contracts.Services;
 using AutoMapper;
 using Domain.Entities.ApplicationUser;
@@ -115,7 +116,7 @@ namespace Application.Applications
             try
             {
                 var user = await _userManager.FindByIdAsync(userId);
-                var roleResult = await _userManager.AddToRoleAsync(user, "employee");
+                var roleResult = await _userManager.AddToRoleAsync(user, "customer");
                 if (roleResult.Succeeded)
                 {
                     return true;
@@ -169,6 +170,63 @@ namespace Application.Applications
             {
                 throw ex.GetBaseException();
             }
+        }
+
+        public async Task<List<UserDto>> GetListAsync()
+        {
+            try
+            {
+                var listUser = _userRepository.GetList().ToList();
+                if (!listUser.Any())
+                {
+                    return new List<UserDto>();
+                }
+                var result = _iMapper.Map<List<UserDto>>(listUser);
+                List<Task<IList<string>>> taskGetUser = new List<Task<IList<string>>>();
+                
+                for (var i = 0; i < result.Count; i++)
+                {
+                    result[i].Role = (await _userManager.GetRolesAsync(listUser[i])).First();
+                }
+                return result;
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<bool> EditAsync(RequestUpdateUserDto input)
+        {
+            try
+            {
+                var user = (_userRepository.GetList()).Where(x => x.Id == input.Id).FirstOrDefault();
+                if (user == null)
+                    return false;
+                var result = _iMapper.Map(input, user);
+                switch (input.Role)
+                {
+                    case "0":
+                        _userRepository.Update(result, "customer");
+                        break;
+                    default:
+                        _userRepository.Update(result, "employee");
+                        break;
+                }
+                return true;
+            }
+            catch(Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
+        public async Task<RequestUpdateUserDto> GetAsync(Guid id, ClaimsPrincipal identity)
+        {
+            var user = (_userRepository.GetList()).Where(x => x.Id == id.ToString()).FirstOrDefault();
+            var result = _iMapper.Map<RequestUpdateUserDto>(user);
+            result.Role = (await _userManager.GetRolesAsync(await _userManager.GetUserAsync(identity))).First();
+            return result;
         }
     }
 }

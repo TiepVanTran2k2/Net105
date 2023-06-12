@@ -26,6 +26,11 @@ builder.Services.AddAuthorization(option =>
     {
         policy.RequireRole("sm");
     });
+
+    option.AddPolicy("employee", policy =>
+    {
+        policy.RequireRole("employee");
+    });
 });
 builder.Services.AddMemoryCache();
 #region DI

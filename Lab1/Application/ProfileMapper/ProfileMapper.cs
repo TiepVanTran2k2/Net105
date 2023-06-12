@@ -3,6 +3,7 @@ using Application.Contracts.Dtos.Bill;
 using Application.Contracts.Dtos.Lab4;
 using Application.Contracts.Dtos.Payment;
 using Application.Contracts.Dtos.Product;
+using Application.Contracts.Dtos.User;
 using AutoMapper;
 using Domain.Entities.ApplicationUser;
 using Domain.Entities.Bill;
@@ -23,6 +24,9 @@ namespace Application.ProfileMapper
             CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
             CreateMap<ApplicationUser, IdentityUser>().ReverseMap();
             CreateMap<ApplicationUserDto, IdentityUser>().ReverseMap();
+            CreateMap<ApplicationUser, UserDto>()
+                .ReverseMap();
+            CreateMap<ApplicationUser, RequestUpdateUserDto>().ReverseMap();
 
             #endregion
             #region Product
@@ -42,6 +46,7 @@ namespace Application.ProfileMapper
                 .ReverseMap();
             CreateMap<PaymentResponseModel, Bill>()
                 .ReverseMap();
+
             #endregion
         }
     }

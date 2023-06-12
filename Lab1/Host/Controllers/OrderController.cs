@@ -1,9 +1,11 @@
 ﻿using Application.Contracts.Dtos.Product;
 using Application.Contracts.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Host.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly ICartService _iCartService;

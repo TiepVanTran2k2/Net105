@@ -1,7 +1,10 @@
 ﻿using Application.Contracts.Dtos.ApplicationUser;
+using Application.Contracts.Dtos.User;
 using Application.Contracts.Services;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using EntityFrameworkCore.Entity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Host.Controllers
 {
@@ -15,9 +18,11 @@ namespace Host.Controllers
             _iApplicationUserService = applicationUserService;
             _notyf = notyf;
         }
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var result = await _iApplicationUserService.GetListAsync();
+            return View(result);
         }
         [HttpGet]
         public IActionResult Register()
@@ -97,6 +102,17 @@ namespace Host.Controllers
                 _notyf.Error(ex.Message, 4);
                 return RedirectToAction("Information");
             }
+        }
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            return View(await _iApplicationUserService.GetAsync(id, User));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Update(RequestUpdateUserDto input)
+        {
+            await _iApplicationUserService.EditAsync(input);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

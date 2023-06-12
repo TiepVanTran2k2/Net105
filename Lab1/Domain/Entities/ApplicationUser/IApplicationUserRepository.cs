@@ -10,5 +10,6 @@ namespace Domain.Entities.ApplicationUser
     public interface IApplicationUserRepository
     {
         IQueryable<ApplicationUser> GetList();
+        bool Update(ApplicationUser input, string role);
     }
 }

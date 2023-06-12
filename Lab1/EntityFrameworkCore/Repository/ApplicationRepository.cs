@@ -26,5 +26,19 @@ namespace EntityFrameworkCore.Repository
         {
             return _dbContextApp.ApplicationUser;
         }
+
+        public bool Update(ApplicationUser input, string role)
+        {
+            var user = _dbContextApp.ApplicationUser.Update(input);
+            var roleId = (_dbContextApp.Roles.Where(x => x.Name == role).First()).Id;
+            var userRole = _dbContextApp.UserRoles.First(x => x.UserId == input.Id);
+            _dbContextApp.UserRoles.Remove(userRole);
+            _dbContextApp.SaveChanges();
+
+            _dbContextApp.UserRoles.Add(new IdentityUserRole<string> { RoleId = roleId, UserId = input.Id});
+            _dbContextApp.SaveChanges();
+
+            return true;
+        }
     }
 }
