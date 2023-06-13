@@ -11,19 +11,23 @@ namespace Host.Controllers
     {
         private readonly IVnPayService _iVnPayService;
         private readonly ICartService _iCartService;
+        private readonly IPaypalService _paypalService;
         public PaymentController(IVnPayService vnPayService,
-                                 ICartService cartService)
+                                 ICartService cartService,
+                                 IPaypalService paypalService)
         {
             _iVnPayService = vnPayService;
             _iCartService = cartService;
+            _paypalService = paypalService;
         }
-        public ActionResult CreateUrl(PaymentInformationModel model)
+        public async Task<IActionResult> CreateUrl(PaymentInformationModel model)
         {
-            var url = _iVnPayService.CreatePaymentUrl(model, HttpContext);
-            if (!string.IsNullOrEmpty(url))
-            {
-                return Json(new { success = true, responseText = url });
-            }
+            await _paypalService.CreateUrlSandboxPaypalAsync(model);
+            //var url = _iVnPayService.CreatePaymentUrl(model, HttpContext);
+            //if (!string.IsNullOrEmpty(url))
+            //{
+            //    return Json(new { success = true, responseText = url });
+            //}
             return Json(new { success = false});
         }
         public async Task<IActionResult> PaymentCallback()
@@ -32,6 +36,10 @@ namespace Host.Controllers
             await _iCartService.InsertOrderAsync(response, User);
             await _iCartService.RemoveCartAsync(User);
             return RedirectToAction("Index", "Home");
+        }
+        public async Task<IActionResult> PaymentPaypal(PaymentInformationModel input)
+        {
+            return View();
         }
     }
 }

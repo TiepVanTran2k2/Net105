@@ -138,7 +138,8 @@
                 "OrderType": "Digital",
                 "OrderDescription": ""+UserId,
                 "Name": "UserId:",
-                "Amount": @(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count) * 23000)
+                "Amount": @(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count)),
+                "User": UserId
             }
             console.log(model);
             $.ajax({

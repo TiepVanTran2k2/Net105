@@ -22,6 +22,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="PayPal" Version="2.0.0-rc2" />
   </ItemGroup>
 
 </Project>
