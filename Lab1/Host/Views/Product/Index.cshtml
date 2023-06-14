@@ -9,35 +9,44 @@
 @{
     Layout = "_LayoutManager";
 }
-<a asp-action="Create" class="btn btn-success">Create</a>
-<a asp-controller="Home" asp-action="Index" class="btn btn-success">Home</a>
-<table class="table">
-    <thead>
-        <tr>
-            @foreach (var item in _iHelperService.GetListNameFieldAsync<ProductDto>())
-            {
-                if (item != "Id")
-                {
-                    <th>@item</th>
-                }
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @if(Model?.Items != null)
-        {
-            foreach (var item in Model.Items)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Price</td>
-                    <td>@item.Status</td>
-                    <td><img src="@item.UrlImg" width="50px" height="35px" /></td>
-                    <td>
-                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-success">Edit</a> 
-                    </td>
+
+<div class="container mt-5 px-2">
+    <a href="https://localhost:7071/" class="btn btn-warning" data-abc="true"> <i class="fa fa-chevron-left"></i> Back to orders</a>
+    <a asp-action="Create" class="btn btn-success">Create</a>
+    <div class="mb-2 d-flex justify-content-between align-items-center">
+    </div>
+    <div class="table-responsive">
+        <table class="table table-responsive table-borderless">
+
+            <thead>
+                <tr class="bg-light">
+                    <th scope="col" width="5%">#</th>
+                    <th scope="col" width="20%">Name</th>
+                    <th scope="col" width="10%">Price</th>
+                    <th scope="col" width="20%">Status</th>
+                    <th scope="col" width="15%">Image</th>
+                    <th scope="col" width="10%"></th>
                 </tr>
-            }
-        }
-    </tbody>
-</table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <th scope="row"><input class="form-check-input" type="checkbox"></th>
+
+                        <td><span class="ms-1">@item.Name</span></td>
+                        <td><span class="ms-1">@item.Price</span></td>
+                        <td><span class="ms-1">@item.Status</span></td>
+                        <td><span class="ms-1"><img src="@item.UrlImg" width="50px" height="35px" /></span></td>
+                        <td>
+                            <a class="btn btn-success" asp-action="Update" asp-route-id="@item.Id">Edit</a>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div>

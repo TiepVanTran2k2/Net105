@@ -84,7 +84,7 @@
 
                 <div class="card bg-primary text-white rounded-3">
                   <div class="card-body">
-                    <form asp-controller="Payment" asp-action="CreateUrl" class="mt-4">
+                    <form asp-controller="Payment" asp-action="CreateUrl" class="mt-4">v>
                          <div class="form-group">
                             <label for="ordertype">Payments</label>
                             <select id="PaymentOptions" class="form-control">
@@ -120,8 +120,8 @@
 </section>
 
 <script>
-    var user = document.getElementById("User").value;
     function payment(UserId){
+
         if (@(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count) * 23000) <5000) {
             Swal.fire(
             'Warning',
@@ -138,8 +138,7 @@
                 "OrderType": "Digital",
                 "OrderDescription": ""+UserId,
                 "Name": "UserId:",
-                "Amount": @(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count)),
-                "User": UserId
+                "Amount": @(Model.Where(x => x.Status == (int)StatusProductEnum.open).Sum(x => x.Price * x.Count) * 23000),
             }
             console.log(model);
             $.ajax({

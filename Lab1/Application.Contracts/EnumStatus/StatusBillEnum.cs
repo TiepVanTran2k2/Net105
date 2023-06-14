@@ -8,6 +8,6 @@ namespace Application.Contracts.EnumStatus
 {
     public enum StatusBillEnum
     {
-        Unpaid, Paid, Delivering, Success
+        Unpaid, Paid, Delivering, Success, Cancel
     }
 }

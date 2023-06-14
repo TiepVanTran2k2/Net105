@@ -188,7 +188,7 @@ namespace Application.Applications
                 {
                     result[i].Role = (await _userManager.GetRolesAsync(listUser[i])).First();
                 }
-                return result;
+                return result.Where(x => x.Role != "sm").ToList();
             }
             catch(Exception ex)
             {

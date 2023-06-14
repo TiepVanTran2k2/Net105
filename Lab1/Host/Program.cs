@@ -51,7 +51,6 @@ builder.Services.AddTransient<IVnPayService, VnPayService>();
 builder.Services.AddTransient<IBillRepository, BillRepository>();
 builder.Services.AddTransient<IBillDetailRepository, BillDetailRepository>();
 builder.Services.AddTransient<IOrderService, OrderService>();
-builder.Services.AddTransient<IPaypalService, PaypalService>();
 #endregion
 // Add Blob service client
 builder.Services.AddSingleton(options => new BlobServiceClient(builder.Configuration.GetValue<string>("MangoConnection")));

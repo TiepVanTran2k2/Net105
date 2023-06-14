@@ -3,7 +3,7 @@
 @{
     Layout = "_LayoutHistory";
 }
-@model List<BillDto>
+@model List<BillManagerDto>
 <div class="container">
     <article class="card">
         <header class="card-header"> My Orders / Tracking </header>        
@@ -11,11 +11,12 @@
             @foreach (var item in Model)
             {
                 <h6>Order ID: <a class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#staticBackdrop">@item.OrderId</a></h6>
+                <h6>Number phone: <a class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#staticBackdrop">@item.PhoneNumber</a></h6>
                 <article class="card">
                     <div class="card-body row">
                         <div class="col"> <strong>Payment time:</strong> <br>@item.CreationDate </div>
                         <div class="col"> <strong>Payment:</strong> <br> @item.PaymentMethod</div>
-                        <div class="col"> <strong>Status:</strong> <br> @(((StatusBillEnum)item.Status).ToString()) </div>
+                        <div class="col"> <strong>Status:</strong> <br> <span id="div_status_@item.OrderId">@(((StatusBillEnum)item.Status).ToString())</span> </div>
                         <div class="col"> <strong>Tracking #:</strong> <br> @item.PaymentId </div>
                         @if(item.Status == 0 || item.Status == 1)
                         {
@@ -68,6 +69,7 @@
             console.log(data);
             if (data.status == true && data.statusBill == 2) {
                 var id = "btn_" + orderId;
+                document.getElementById("div_status_" + orderId).innerHTML = "Delivering"
                 document.getElementById(id).innerHTML = "Received";
             }
             else if(data.status == true && data.statusBill == 3) 

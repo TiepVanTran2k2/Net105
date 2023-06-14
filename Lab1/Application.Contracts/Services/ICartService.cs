@@ -21,7 +21,7 @@ namespace Application.Contracts.Services
         Task<List<BillDto>> HistoryBillAsync(ClaimsPrincipal input);
         Task<ItemCacheDto> ChangeCountAsync(RequestChangeCountProductCacheDto input, ClaimsPrincipal claims);
         Task<List<ProductCacheDto>> RemoveItemCartAsync(ResponseRemoveItemCart input);
-        Task<List<BillDto>> ManagerBillAsync();
+        Task<List<BillManagerDto>> ManagerBillAsync();
         Task<ResponseChangeStatusBill> CheckStatusBillAsync(ResponseCheckStatusBillCart input);
     }
 }

@@ -47,6 +47,11 @@ namespace Application.ProfileMapper
             CreateMap<PaymentResponseModel, Bill>()
                 .ReverseMap();
 
+            CreateMap<Bill, BillManagerDto>()
+                .ForPath(dest => dest.DetailBillDto, opt => opt.MapFrom(src => src.DetailBill))
+                .ReverseMap();
+            CreateMap<DetailBill, DetailBillManagerDto>().ReverseMap();
+
             #endregion
         }
     }

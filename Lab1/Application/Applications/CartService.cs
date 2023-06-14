@@ -4,6 +4,7 @@ using Application.Contracts.Dtos.Product;
 using Application.Contracts.EnumStatus;
 using Application.Contracts.Services;
 using AutoMapper;
+using Domain.Entities.ApplicationUser;
 using Domain.Entities.Bill;
 using Domain.Entities.Product;
 using Domain.Shared.Helpers;
@@ -27,12 +28,14 @@ namespace Application.Applications
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IBillRepository _iBillRepository;
         private readonly IBillDetailRepository _iBillDetailRepository;
+        private readonly IApplicationUserRepository _iApplicationUserRepository;
         public CartService(ICacheHelper cacheHelper,
                            IProductRepository iProductRepository,
                            IMapper mapper,
                            UserManager<IdentityUser> userManager,
                            IBillRepository billRepository,
-                           IBillDetailRepository billDetailRepository)
+                           IBillDetailRepository billDetailRepository,
+                           IApplicationUserRepository applicationUserRepository)
         {
             _iCacheHelper = cacheHelper;
             _iProductRepository = iProductRepository; 
@@ -40,6 +43,7 @@ namespace Application.Applications
             _userManager = userManager;
             _iBillRepository = billRepository;
             _iBillDetailRepository = billDetailRepository;
+            _iApplicationUserRepository = applicationUserRepository;
         }
         public async Task<bool> AddItemAsync(Guid id, ClaimsPrincipal input)
         {
@@ -202,7 +206,7 @@ namespace Application.Applications
                                              Status = x.Key.Status,
                                              CreationDate = x.Key.CreationDate
                                          }).ToList();
-
+                var listUser = _iApplicationUserRepository.GetList();
                 var result = _iMapper.Map<List<BillDto>>(listBill);
                 return result;
             }
@@ -224,7 +228,7 @@ namespace Application.Applications
                 }
                 var billResult = _iMapper.Map<Bill>(bill);
                 billResult.UserId = userId;
-                billResult.Status = (int)StatusBillEnum.Paid;
+                billResult.Status = bill.TransactionId == "0" ? (int)StatusBillEnum.Cancel : (int)StatusBillEnum.Paid;
                 var billInsert = await _iBillRepository.CreateAsync(billResult);
                 foreach(var item in dataCache.ListProductCache)
                 {
@@ -241,12 +245,12 @@ namespace Application.Applications
             }
         }
 
-        public async Task<List<BillDto>> ManagerBillAsync()
+        public async Task<List<BillManagerDto>> ManagerBillAsync()
         {
             var listBill = (await _iBillRepository.GetAllAsync());
             if (!listBill.Any())
             {
-                return new List<BillDto>();
+                return new List<BillManagerDto>();
             }
             var listBillDetail = (await _iBillDetailRepository.GetAllAsync());
             var result = listBill.Join(listBillDetail, b => b.Id, c => c.BillId,
@@ -257,6 +261,7 @@ namespace Application.Applications
                                                         })
                                  .GroupBy(x => x.B).Select(x => new Bill
                                  {
+                                     UserId = x.Key.UserId,
                                      OrderDescription = x.Key.OrderDescription,
                                      OrderId = x.Key.OrderId,
                                      PaymentId = x.Key.PaymentId,
@@ -271,7 +276,13 @@ namespace Application.Applications
                                  }).
                                  OrderByDescending(x => x.CreationDate).
                                  ThenBy(x => x.Status).ToList();
-            return _iMapper.Map<List<BillDto>>(result);
+            var listResult = _iMapper.Map<List<BillManagerDto>>(result);
+            var listUser = (_iApplicationUserRepository.GetList());
+            foreach(var iten in listResult)
+            {
+                iten.PhoneNumber = listUser.Where(x => x.Id == iten.UserId).FirstOrDefault().PhoneNumber;
+            }
+            return  listResult;
         }
 
         public async Task<bool> RemoveCartAsync(ClaimsPrincipal input)
