@@ -40,7 +40,7 @@
                                   <h5>@item.Name</h5>
                                 </div>
                                 <div class="ms-3">
-                                  <input id="count_@item.Id" min="1" max="10" onchange="changeNumber('@((await UserManager.GetUserAsync(User))?.Id)', '@item.Id', '@item.Price')" style="width: 70px; margin-left: 50px" class="form-control" type="number" value="@item.Count"/>
+                                  <input id="count_@item.Id" min="1" max="10" onchange="changeNumber('@((await UserManager.GetUserAsync(User))?.Id)', '@item.Id', '@item.Price')" style="width: 70px; margin-left: 50px" class="form-control" type="number" onKeyDown="return false" value="@item.Count"/>
                                 </div>
                               </div>
                               <div class="d-flex flex-row align-items-center">                            
